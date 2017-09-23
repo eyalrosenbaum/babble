@@ -1,0 +1,168 @@
+@font-face{
+    font-family: Nunito;
+    src: url('./NunitoSans-Regular.ttf');
+}
+body{
+    width:100%;
+    height: 14.3%;
+    background-color: rgb(235, 237, 236);
+    margin: auto;
+}
+header.site-header{
+    background-color:rgb(53, 55, 68);
+    width: 100%;
+    height: 100px;
+    box-sizing: border-box;
+    padding: 15px 13px;
+}
+.side-bar{
+    position: absolute;
+    height: calc(100% - 100px);
+    width: 230px;
+    background-color: rgb(94, 211, 149);
+}
+footer.write-message-container{
+    position: absolute;
+    top: calc(100% - 93px);
+    left: 230px;
+    height: 93px;
+    width: calc(100% - 230px);
+    box-sizing: border-box;
+    background-color: rgb(255, 255, 255);
+    border-top:0.5px solid rgb(153, 153, 153);
+}
+footer.write-message-container>textarea{
+    font-family: Nunito;
+    color:  #616161;
+    font-size: 15px;/* Approximation due to font substitution */
+    font-weight: 400;
+    line-height: 40px;/* Approximation due to font substitution */
+    text-align: left;
+}
+main.main-message-area{
+    width: calc(100% - 230px);
+    margin-left: 230px;
+    position: relative;
+}
+.title{
+    font-family: Nunito;
+    color:  #292929;
+    font-size: 22.5px;/* Approximation due to font substitution */
+    font-weight: 400;
+    text-align: left;
+    margin-left: 29px;
+}
+.purpleman-writing,.green-writing{
+    font-family: Nunito;
+    color:  #353744;
+    font-size: 15px;/* Approximation due to font substitution */
+    font-weight: 700;
+    text-align: right;
+}
+.msg-send{
+    position: relative;
+}
+.msg-send:hover{
+    cursor: pointer;
+}
+img.msg-arrow-img{
+    height: 27px;
+    width: 32px;
+    position: absolute;
+    top: 23px;
+    left: 91.4%;
+    z-index: 100;
+    padding:13px 9px 14px 15px;
+}
+img.msg-wrap-img{
+    height: 55px;
+    width: 55px;
+    position: absolute;
+    top: 22px;
+    left: 91.4%;
+}
+ul.message-list{
+    list-style: none;
+    margin-top: -14px;
+}  
+.message-body{
+    max-width: 600px;
+    border-radius: 9px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #d7d7d7;
+    background-color: #ffffff;
+    font-family: Nunito;
+    color: #616161;
+    font-size: 15px;
+    font-weight: 400;
+    text-align: left;
+    float: left;
+}
+/*.message-body:active{
+    background-image: url('./../images/close.png');
+    background-repeat: no-repeat;
+    background-position:98% 12%;
+}*/
+span.delete-button{
+    position: absolute;
+    left: 660%;
+    top: 7px;
+    display: none;
+}
+span.delete-button:hover{
+    cursor: pointer;
+}
+.message-body:hover span.delete-button{
+    display: inline-block;
+}
+.message-image{
+    width: 36px;
+    height: 36px;
+    border-radius: 20px;
+    float: left;
+    margin: 10px;
+    margin-left: -20px;
+}
+.message-text-header{
+    float: left;
+    display: block;
+    font-family: Nunito;
+    color: #202729;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: right;
+    padding: 9px 9px 1px 9px;
+    position: relative;
+}
+.message-sender{
+    display: inline-block;
+    font-size: 1em;
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+    -webkit-margin-start: 0;
+    -webkit-margin-end: 0;
+    font-weight: bold;
+}
+.message-body-text{
+    display: block;
+    padding: 1px 9px 6px 8px;
+    clear: both;
+}
+.message-time{
+    font-family: Nunito;
+    color:  #999999;
+    font-size: 12px;/* Approximation due to font substitution */
+    font-weight: 400;
+    text-align: left;
+    margin-left: 10px;
+}
+li.message{
+    clear: both;
+    padding-top: 14px;
+}
+.fixed-area{
+    position: absolute;
+    top: 10px;
+    right: 42px;
+}
