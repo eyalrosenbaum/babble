@@ -1,6 +1,7 @@
 var http = require('http'),
     url = require('url'),
-    fs = require('fs');
+    fs = require('fs'),
+    crypto = require('crypto');
 
 var messages = ["testing"];
 var clients = [];
@@ -9,6 +10,11 @@ var clients = [];
 //     res.end("Hello world");
 // }).listen(8080,'localhost');
 // console.log('server running');
+
+function createHash(emailAddress) {
+    var trimmedAddress = emailAddress.trim().toLowerCase();
+    return crpyto.createHash('md5').update(trimmedAddress).digest('hex');
+}
 
 http.createServer(function (req, res) {
     //parse URL
@@ -42,70 +48,77 @@ http.createServer(function (req, res) {
     } else {
         switch (url_parts.pathname) {
             case '/client/styles/main.css':
-                fs.readFile('../client/styles/main.css', function (err, data) {
+                fs.readFile('client/styles/main.css', function (err, data) {
                     res.writeHead(200, { 'Content-Type': 'text/css' });
                     res.write(data);
                     res.end();
                 });
                 break;
+            case '/client/scripts/main.js':
+                fs.readFile('client/scripts/main.js', function (err, data) {
+                    res.writeHead(200, { 'Content-Type': 'text/javascript' });
+                    res.write(data);
+                    res.end();
+                });
+                break;
             case '/client/images/Babble-logo.png':
-                fs.readFile('../client/images/Babble-logo.png', function (err, data) {
+                fs.readFile('client/images/Babble-logo.png', function (err, data) {
                     res.writeHead(200, { 'Content-Type': 'image/png' });
                     res.write(data);
                     res.end();
                 });
                 break;
             case '/client/images/msg-send.png':
-                fs.readFile('../client/images/msg-send.png', function (err, data) {
+                fs.readFile('client/images/msg-send.png', function (err, data) {
                     res.writeHead(200, { 'Content-Type': 'image/png' });
                     res.write(data);
                     res.end();
                 });
                 break;
             case '/client/images/msg-wrap.png':
-                fs.readFile('../client/images/msg-wrap.png', function (err, data) {
+                fs.readFile('client/images/msg-wrap.png', function (err, data) {
                     res.writeHead(200, { 'Content-Type': 'image/png' });
                     res.write(data);
                     res.end();
                 });
                 break;
             case '/client/images/eyal.jpg':
-                fs.readFile('../client/images/eyal.jpg', function (err, data) {
+                fs.readFile('client/images/eyal.jpg', function (err, data) {
                     res.writeHead(200, { 'Content-Type': 'image/jpg' });
                     res.write(data);
                     res.end();
                 });
                 break;
             case '/client/styles/NunitoSans-Regular.ttf':
-                fs.readFile('../client/styles/NunitoSans-Regular.ttf', function (err, data) {
+                fs.readFile('client/styles/NunitoSans-Regular.ttf', function (err, data) {
                     res.writeHead(200, { 'Content-Type': 'application/x-font-ttf' });
                     res.write(data);
                     res.end();
                 });
                 break;
             case '/client/images/close.png':
-                fs.readFile('../client/images/close.png', function (err, data) {
+                fs.readFile('client/images/close.png', function (err, data) {
                     res.writeHead(200, { 'Content-Type': 'image/png' });
                     res.write(data);
                     res.end();
                 });
                 break;
             case '/client/images/green.png':
-                fs.readFile('../client/images/green.png', function (err, data) {
+                fs.readFile('client/images/green.png', function (err, data) {
                     res.writeHead(200, { 'Content-Type': 'image/png' });
                     res.write(data);
                     res.end();
                 });
                 break;
             case '/client/images/purpleman.png':
-                fs.readFile('../client/images/purpleman.png', function (err, data) {
+                fs.readFile('client/images/purpleman.png', function (err, data) {
                     res.writeHead(200, { 'Content-Type': 'image/png' });
                     res.write(data);
                     res.end();
                 });
                 break;
             default:
-                fs.readFile('../client/index.html', function (err, data) {
+                fs.readFile('client/index.html', function (err, data) {
                     res.writeHead(200, { 'Content-Type': 'text/html' });
                     res.write(data);
                     res.end();

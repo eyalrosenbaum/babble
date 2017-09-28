@@ -10,67 +10,100 @@
 </head>
 
 <body>
-    <header class="site-header">
-        <img src="../client/images/Babble-logo.png" alt="logo">
-    </header>
-    <nav class="side-bar">
-    </nav>
-    <main class="main-message-area">
-        <div class="fixed-area">
-            <img src="../client/images/green.png" alt="">
-            <span class="green-writing">0</span>
-            <img src="../client/images/purpleman.png" alt="">
-            <span class="purpleman-writing">0</span>
-        </div>
-        <h1 class="title">Vegans</h1>
-        <ul class="message-list">
-            <li class="message">
-                <img src="../client/images/eyal.jpg" alt="my-picture" class="message-image">
-                <div class="message-body">
-                    <div class="message-text-header">
-                        <h3 class="message-sender">Eyal</h3><span class="message-time">14:00</span><span class="delete-button"><img src="../client/images/close.png" alt="delete message"></span>
-                    </div>
-                    <div class="message-body-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo autem eum, quidem libero quam soluta totam
-                        esse sint quasi dolores doloribus, velit, earum nulla molestiae quaerat veritatis non optio alias.</div>
+    <!-- <div class="Modal-overlay"></div> -->
+    <div class="Modal hidden" id="register">
+        <form action="">
+            <h1 class="modal-header">Who are you?</h1>
+            <div class="full-name-input">
+                <label for="fullName">Full name:</label>
+                <input type="fullName" />
+            </div>
+            <div class="email-input">
+                <label for="email">Email:</label>
+                <input type="email" />
+            </div>
+            <div class="sign-in-buttons">
+                <button class="anonymous-sign-in-btn">Stay Anonymous</button>
+                <button class="identified-sign-in-btn">Save</button>
+            </div>
+        </form>
+        <p class='error-name no-show'>Name needed in order to save</p>
+        <p class='error-email no-show'>Email needed in order to save</p>
+    </div>
+    <div class="mask hidden">
+
+    </div>
+    <div class="app-area">
+        <header class="site-header">
+            <img src="../client/images/Babble-logo.png" alt="logo">
+        </header>
+        <nav class="side-bar">
+        </nav>
+
+        <main class="main-message-area">
+            <header>
+                <div class="fixed-area">
+                    <img src="../client/images/green.png" alt="">
+                    <span class="green-writing">0</span>
+                    <img src="../client/images/purpleman.png" alt="">
+                    <span class="purpleman-writing">0</span>
                 </div>
-            </li>
-            <li class="message">
-                <img src="../client/images/eyal.jpg" alt="my-picture" class="message-image">
-                <div class="message-body">
-                    <div class="message-text-header">
-                        <h3 class="message-sender">Eyal</h3><span class="message-time">14:00</span><span class="delete-button"><img src="../client/images/close.png" alt="delete message"></span>
+            </header>
+            <h1 class="title">Vegans</h1>
+            <ul class="message-list">
+                <li class="message">
+                    <img src="../client/images/eyal.jpg" alt="my-picture" class="message-image">
+                    <div class="message-body">
+                        <div class="message-text-header">
+                            <h3 class="message-sender">Eyal</h3><span class="message-time">14:00</span><span class="delete-button"><img src="../client/images/close.png" alt="delete message"></span>
+                        </div>
+                        <div class="message-body-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo autem eum, quidem libero quam soluta
+                            totam esse sint quasi dolores doloribus, velit, earum nulla molestiae quaerat veritatis non optio
+                            alias.
+                        </div>
                     </div>
-                    <div class="message-body-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo autem eum, quidem libero quam soluta totam
-                        esse sint quasi dolores doloribus, velit, earum nulla molestiae quaerat veritatis non optio alias.</div>
-                </div>
-            </li>
-            <li class="message">
-                <img src="../client/images/eyal.jpg" alt="my-picture" class="message-image">
-                <div class="message-body">
-                    <div class="message-text-header">
-                        <h3 class="message-sender">Eyal</h3><span class="message-time">14:00</span><span class="delete-button"><img src="../client/images/close.png" alt="delete message"></span>
+                </li>
+                <li class="message">
+                    <img src="../client/images/eyal.jpg" alt="my-picture" class="message-image">
+                    <div class="message-body">
+                        <div class="message-text-header">
+                            <h3 class="message-sender">Eyal</h3><span class="message-time">14:00</span><span class="delete-button"><img src="../client/images/close.png" alt="delete message"></span>
+                        </div>
+                        <div class="message-body-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo autem eum, quidem libero quam soluta
+                            totam esse sint quasi dolores doloribus, velit, earum nulla molestiae quaerat veritatis non optio
+                            alias.
+                        </div>
                     </div>
-                    <div class="message-body-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo autem eum, quidem libero quam soluta totam
-                        esse sint quasi dolores doloribus, velit, earum nulla molestiae quaerat veritatis non optio alias.</div>
-                </div>
-            </li>
-        </ul>
-    </main>
-    <footer class="write-message-container">
-        <!--<textarea name="" id="" cols="30" rows="10">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit ratione et, quisquam temporibus tempora blanditiis, repudiandae dignissimos error molestias veniam adipisci accusamus id a doloribus ipsam autem rem deserunt? Impedit?
-            <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab, rerum! Vitae quod, asperiores necessitatibus odit repudiandae tempora recusandae voluptatem quisquam dolorum cupiditate, voluptatum error placeat itaque sequi cumque voluptas cum.</span>
-            <span>Ullam laborum adipisci aliquid at distinctio eaque ducimus veritatis, architecto debitis dolorem blanditiis inventore, vel necessitatibus, quae dolor corporis totam sunt ea eum omnis assumenda quisquam quidem dolorum. Autem, impedit.</span>
-            <span>Maxime nihil officiis debitis libero facilis, corrupti expedita, necessitatibus autem, magni aspernatur id ipsa ratione quidem atque. Quas saepe assumenda nisi ab fugiat, ea libero. Soluta sed voluptatum id earum.</span>
-            <span>Ab neque consequuntur dolor, ratione dolore dicta perferendis quam illo similique! Quod laboriosam quos dolor totam laudantium minus suscipit, est dicta delectus. Maxime mollitia, pariatur odit, tempore quia vitae facere.</span>
-        </textarea>-->
-        <div class="msg-send">
-            <img src="../client/images/msg-send.png" alt="send-message-button-wrapper" class="msg-arrow-img">
-            <img src="../client/images/msg-wrap.png" alt="send-message-button" class="msg-wrap-img">
-        </div>
+                </li>
+                <li class="message">
+                    <img src="../client/images/eyal.jpg" alt="my-picture" class="message-image">
+                    <div class="message-body">
+                        <div class="message-text-header">
+                            <h3 class="message-sender">Eyal</h3><span class="message-time">14:00</span><span class="delete-button"><img src="../client/images/close.png" alt="delete message"></span>
+                        </div>
+                        <div class="message-body-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo autem eum, quidem libero quam soluta
+                            totam esse sint quasi dolores doloribus, velit, earum nulla molestiae quaerat veritatis non optio
+                            alias.
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </main>
+        <footer class="write-message-container">
+            <div class='Growable js-growable'>
+                <pre><span></span><br></pre>
+                <textarea cols="30" rows="10">
+                </textarea>
+            </div>
+            <div class="msg-send">
+                <img src="../client/images/msg-send.png" alt="send-message-button-wrapper" class="msg-arrow-img">
+                <img src="../client/images/msg-wrap.png" alt="send-message-button" class="msg-wrap-img">
+            </div>
 
 
-    </footer>
+        </footer>
+    </div>
+    <script src='../client/scripts/main.js' type='text/javascript'></script>
 </body>
 
 </html>

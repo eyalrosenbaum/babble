@@ -1,0 +1,16 @@
+{
+  "name": "babble",
+  "version": "1.0.0",
+  "description": "babble chat",
+  "main": "client/main.js",
+  "directories": {
+    "start": "server/main.js",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/main.js"
+  },
+  "author": "Eyal Rosenbaum",
+  "license": "ISC"
+}

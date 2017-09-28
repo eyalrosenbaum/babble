@@ -2,9 +2,13 @@
     font-family: Nunito;
     src: url('./NunitoSans-Regular.ttf');
 }
+html{
+    height: 100%;
+    width: 100%;
+}
 body{
+    height: 100%;
     width:100%;
-    height: 14.3%;
     background-color: rgb(235, 237, 236);
     margin: auto;
 }
@@ -36,8 +40,50 @@ footer.write-message-container>textarea{
     color:  #616161;
     font-size: 15px;/* Approximation due to font substitution */
     font-weight: 400;
-    line-height: 40px;/* Approximation due to font substitution */
     text-align: left;
+    width: 100%;
+    position: absolute;
+    top: calc(100% - 93px);
+    overflow: hidden;
+    border: none;
+    padding: 0;
+}
+.Growable {
+	/*position: relative;*/
+	max-height: 300px;
+	overflow: hidden;
+	-webkit-scrollbar: red;
+}
+
+.Growable textarea,
+.Growable pre {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: inherit;
+	font-size: inherit;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	/*padding: 0.5em;*/
+}
+
+.Growable textarea {
+    font-family: Nunito;
+    color:  #616161;
+    font-size: 15px;/* Approximation due to font substitution */
+    font-weight: 400;
+    text-align: left;
+    width: 100%;
+    position: absolute;
+    top: calc(100% - 93px);
+    overflow: hidden;
+    resize: none;
+	border: none;
+    padding: 0;
+	height: 100%;
+	overflow: visible;
+    margin:0;
+    padding: 0;
 }
 main.main-message-area{
     width: calc(100% - 230px);
@@ -99,11 +145,6 @@ ul.message-list{
     text-align: left;
     float: left;
 }
-/*.message-body:active{
-    background-image: url('./../images/close.png');
-    background-repeat: no-repeat;
-    background-position:98% 12%;
-}*/
 span.delete-button{
     position: absolute;
     left: 660%;
@@ -165,4 +206,138 @@ li.message{
     position: absolute;
     top: 10px;
     right: 42px;
+}
+.Modal {
+    border-radius: 2px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 28em;
+    height: 12em;
+    max-width: 600px;
+    max-height: 300px;
+    margin: auto;
+    background-color: white;
+    padding: 20px;
+    font-family: Nunito;
+    z-index: 100;
+    background-color: rgb(235, 237, 236);
+    opacity: 1;
+    transition: opacity 1.4s ease-out;
+    -ms-transition: opacity 1.4s ease-out;
+    -moz-transition: opacity 1.4s ease-out;
+    -webkit-transition: opacity 1.4s ease-out;
+}
+.Modal-overlay {
+	background-color: rgba(0, 0, 0, 0.5);
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+}
+
+.Modal:target {
+	display: block;
+}
+.app-area{
+    height: 100%;
+}
+.Modal>form{
+    padding:0.5em;
+}
+.mask{
+    position: fixed;
+    top: 0;
+    left: 0;
+    background:rgba(0, 0, 0, 0.6);
+    z-index:90;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    transition: opacity 1.4s ease-out;
+    -ms-transition: opacity 1.4s ease-out;
+    -moz-transition: opacity 1.4s ease-out;
+    -webkit-transition: opacity 1.4s ease-out;
+}
+.full-name-input,.email-input{
+    padding-top: 20px;
+}
+input{
+    position: absolute;
+    left: 110px;
+    width: 27em;
+    line-height: 1.8em;
+    border-radius: 12.2px;
+    border-style: solid;
+    border-width: 0.5px;
+    border-radius: 9px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #d7d7d7;
+    margin: -5px;
+}
+
+label{
+    font-family: Nunito;
+    color: #616161;
+    font-size: 16px;
+    font-weight: 400;
+    text-align: left;
+}
+.modal-header{
+    font-size: 1.5em;
+    font-weight: normal;
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+}
+.sign-in-buttons{
+    position: absolute;
+    bottom: 2.5em;
+    right: 1.3em;
+}
+.sign-in-buttons>button{
+    font-family: Nunito;
+    border-style: none;
+    border-radius: 2px;
+    font-size: 16px;
+}
+.sign-in-buttons>button:hover{
+    cursor: pointer;
+}
+.identified-sign-in-btn{
+    color:white;
+background: -webkit-linear-gradient(-180deg, rgb(117, 194, 0), rgb(64, 129, 67));
+  background: linear-gradient(-180deg, rgb(117, 194, 0), rgb(64, 129, 67));
+    width: 5em;
+}
+.anonymous-sign-in-btn{
+background: -webkit-linear-gradient(-180deg, rgb(177, 183, 188), rgb(148, 149, 149));
+  background: linear-gradient(-180deg, rgb(177, 183, 188), rgb(148, 149, 149));
+    margin-right: 5px;
+}
+.hidden{
+    opacity: 0;
+    transition: opacity 1.4s ease-out;
+    -ms-transition: opacity 1.4s ease-out;
+    -moz-transition: opacity 1.4s ease-out;
+    -webkit-transition: opacity 1.4s ease-out;
+}
+
+.hidden button:hover{
+    cursor: default;
+}
+.error-name,.error-email {
+    font-family: Nunito;
+    font-size: 0.7em;
+    color: red;
+    
+}
+.show{
+    display:block;
+}
+.no-show{
+    display: none;
 }
