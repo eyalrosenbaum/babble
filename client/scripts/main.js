@@ -43,13 +43,16 @@ function removeMaskModalFromDom() {
     body.removeChild(mask);
     body.removeChild(modal);
 }
-//after signing in either as anonymous or identified user, we remove modal and mask
+//sending data to server, after signing in either as anonymous or identified user, we remove modal and mask
 function signIn() {
-    document.querySelector('.mask').classList.add('hidden');
-    document.querySelector('.Modal').classList.add('hidden');
-    setTimeout(function () {
-        removeMaskModalFromDom();
-    }, 1400);
+    register(Babble.userInfo).then(function (response) {
+        console.log('response from server is '+response);
+        document.querySelector('.mask').classList.add('hidden');
+        document.querySelector('.Modal').classList.add('hidden');
+        setTimeout(function () {
+            removeMaskModalFromDom();
+        }, 1400);
+    });
 }
 
 //a function to erase errors in identified sign in from screen after the user tries again to sign in
@@ -99,7 +102,13 @@ function identifiedSignIn(e) {
 }
 
 function register(userInfo) {
+    var options = {
+        method: 'post',
+        action: 'register.html',
+        data: JSON.stringify(userInfo)
+    };
 
+    return request(options);
 }
 
 function getMessages(counter, callback) {
@@ -116,4 +125,18 @@ function deleteMessage(id, callback) {
 
 function getStats(callback) {
 
+}
+
+function request(options) {
+    return new Promise((resolve, reject) => {
+        var xhr = new XMLHttpRequest();
+        xhr.open(options.method, options.action);
+        if (options.method === 'post') {
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        }
+        xhr.addEventListener('load', e => {
+            resolve(e.target.responseText);
+        });
+        xhr.send(options.data);
+    });
 }
