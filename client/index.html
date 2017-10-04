@@ -48,14 +48,15 @@
                     <img src="../client/images/purpleman.png" alt="">
                     <span class="purpleman-writing">0</span>
                 </div>
+
+                <h1 class="title">Vegans</h1>
             </header>
-            <h1 class="title">Vegans</h1>
-            <ul class="message-list">
-                <li class="message">
-                    <img src="../client/images/eyal.jpg" alt="my-picture" class="message-image">
+            <ol class="message-list">
+                <!--<li class="message">
+                    <img src="../client/images/eyal.jpg" alt="" class="message-image">
                     <div class="message-body">
                         <div class="message-text-header">
-                            <h3 class="message-sender">Eyal</h3><span class="message-time">14:00</span><span class="delete-button"><img src="../client/images/close.png" alt="delete message"></span>
+                            <cite class="message-sender">Eyal</cite><span class="message-time">14:00</span><span class="delete-button"></span>
                         </div>
                         <div class="message-body-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo autem eum, quidem libero quam soluta
                             totam esse sint quasi dolores doloribus, velit, earum nulla molestiae quaerat veritatis non optio
@@ -67,7 +68,7 @@
                     <img src="../client/images/eyal.jpg" alt="my-picture" class="message-image">
                     <div class="message-body">
                         <div class="message-text-header">
-                            <h3 class="message-sender">Eyal</h3><span class="message-time">14:00</span><span class="delete-button"><img src="../client/images/close.png" alt="delete message"></span>
+                            <h3 class="message-sender">Eyal</h3><span class="message-time">14:00</span><span class="delete-button"></span>
                         </div>
                         <div class="message-body-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo autem eum, quidem libero quam soluta
                             totam esse sint quasi dolores doloribus, velit, earum nulla molestiae quaerat veritatis non optio
@@ -79,22 +80,26 @@
                     <img src="../client/images/eyal.jpg" alt="my-picture" class="message-image">
                     <div class="message-body">
                         <div class="message-text-header">
-                            <h3 class="message-sender">Eyal</h3><span class="message-time">14:00</span><span class="delete-button"><img src="../client/images/close.png" alt="delete message"></span>
+                            <h3 class="message-sender">Eyal</h3><span class="message-time">14:00</span><span class="delete-button"></span>
                         </div>
                         <div class="message-body-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo autem eum, quidem libero quam soluta
                             totam esse sint quasi dolores doloribus, velit, earum nulla molestiae quaerat veritatis non optio
                             alias.
                         </div>
                     </div>
-                </li>
-            </ul>
+                </li>-->
+            </ol>
         </main>
         <!--<footer class="write-message-container">-->
         <div class='Growable js-growable'>
             <form action="">
                 <pre>
-                    <img src="../client/images/msg-send.png" alt="send-message-button-wrapper" class="msg-arrow-img" />
-                    <img src="../client/images/msg-wrap.png" alt="send-message-button" class="msg-wrap-img" />
+                    <button onclick='return sendMessage()'>
+                        <img src="../client/images/msg-send.png" alt="send-message-button-wrapper" class="msg-arrow-img" />
+                    </button>
+                    <button onclick='return sendMessage()'>
+                        <img src="../client/images/msg-wrap.png" alt="send-message-button" class="msg-wrap-img" />
+                    </button>
                    <span></span>
                    <!--<br>-->
                    </pre>

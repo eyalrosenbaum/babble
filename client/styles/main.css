@@ -12,6 +12,9 @@ body{
     background-color: rgb(235, 237, 236);
     margin: auto;
 }
+cite{
+    font-style: normal;
+}
 header.site-header{
     background-color:rgb(53, 55, 68);
     width: 100%;
@@ -164,10 +167,10 @@ main.main-message-area{
     font-weight: 700;
     text-align: right;
 }
-
+/*
 img.msg-arrow-img:hover, img.msg-wrap-img:hover{
     cursor: pointer;
-}
+}*/
 img.msg-arrow-img{
     height: 27px;
     width: 32px;
@@ -184,7 +187,7 @@ img.msg-wrap-img{
     left: 90%;
     z-index: 99;
 }
-ul.message-list{
+ol.message-list{
     list-style: none;
     margin-top: -14px;
 }  
@@ -204,9 +207,14 @@ ul.message-list{
 }
 span.delete-button{
     position: absolute;
-    left: 660%;
+    left: 665%;
     top: 7px;
     display: none;
+    background-image: url(../images/close.png);
+    background-repeat: no-repeat;
+    background-size: 0.8rem 0.8rem;
+    height: 40px;
+    width: 40px;
 }
 span.delete-button:hover{
     cursor: pointer;
@@ -325,7 +333,7 @@ li.message{
 input{
     position: absolute;
     left: 110px;
-    width: 27em;
+    width: 70%;
     line-height: 1.8em;
     border-radius: 12.2px;
     border-style: solid;
@@ -335,6 +343,14 @@ input{
     border-width: 1px;
     border-color: #d7d7d7;
     margin: -5px;
+    font-family: Nunito;
+    font-size: 14px;
+    font-weight: bold;
+    padding-left: 10px;
+}
+
+textarea:focus, input:focus{
+    outline: none;
 }
 
 label{
@@ -366,13 +382,13 @@ label{
 }
 .identified-sign-in-btn{
     color:white;
-background: -webkit-linear-gradient(-180deg, rgb(117, 194, 0), rgb(64, 129, 67));
-  background: linear-gradient(-180deg, rgb(117, 194, 0), rgb(64, 129, 67));
+    background: -webkit-linear-gradient(-180deg, rgb(117, 194, 0), rgb(64, 129, 67));
+    background: linear-gradient(-180deg, rgb(117, 194, 0), rgb(64, 129, 67));
     width: 5em;
 }
 .anonymous-sign-in-btn{
-background: -webkit-linear-gradient(-180deg, rgb(177, 183, 188), rgb(148, 149, 149));
-  background: linear-gradient(-180deg, rgb(177, 183, 188), rgb(148, 149, 149));
+    background: -webkit-linear-gradient(-180deg, rgb(177, 183, 188), rgb(148, 149, 149));
+    background: linear-gradient(-180deg, rgb(177, 183, 188), rgb(148, 149, 149));
     margin-right: 5px;
 }
 .hidden{
