@@ -51,21 +51,20 @@ function handleRegister() {
 function uniqueIDsHelper(clientsArr) {
     var result = [];
     for (var i = 0; i < clientsArr.length; i++) {
-        console.log('clientsArr[i].headers: ' + clientsArr[i].headers);
-        console.log('clientsArr[i].headers: ' + JSON.stringify(clientsArr[i].headers));
-        var idToCheck = (JSON.parse(clientsArr[i].headers)).x - request - id;
-        console.log('idToCheck: ' + idToCheck);
+        var idToCheck = clientsArr[i].getHeader('x-request-id')
         if (idToCheck) {
-            if (!result.contains(idToCheck)) {
+            if (!result.includes(idToCheck)) {
                 result.push(idToCheck);
             };
         };
     };
     console.log('found ' + result.length + ' unique user requests');
+    return result;
 }
 
 var server = http.createServer(function (req, res) {
-    console.log('request headers are: ' + JSON.stringify(req.headers));
+    var url_parts = url.parse(req.url);
+    console.log('url parts: ' + JSON.stringify(url_parts));
     res.setHeader('Access-Control-Allow-Origin', '*');
     if (req.method === 'GET') {
         //parse URL
@@ -74,20 +73,33 @@ var server = http.createServer(function (req, res) {
         // console.log('url parts: ' + JSON.stringify(url_parts));
         //polling handling
         if (url_parts.pathname === '/messages') {
-            var count = url_parts.path.replace(/[^0-9]*/, '');
-            console.log('count is ' + count);
-            if (messagesUtil.messages.length > count) {
-                res.end(JSON.stringify({
-                    count: messagesUtil.messages.length,
-                    append: messagesUtil.getMessages(count)
-                }));
+            /*handling 400 status code error*/
+            console.log(url_parts);
+            if ((url_parts.path.substr(0, 18) !== '/messages?counter=') || (isNaN(url_parts.path.substr(19)))) {
+                console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+                console.log('url_parts.path.substr(0, 18) === ' + url_parts.path.substr(0, 18));
+                console.log('url_parts.path.substr(0, 18) !== "/messages?counter=" is' + (url_parts.path.substr(0, 18) !== '/messages?counter='));
+                console.log('isNaN(url_parts.path.substr(19)) is ' + isNaN(url_parts.path.substr(19)));
+                console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+                res.writeHead(400);
+                res.end();
             } else {
-                //we will store the Response object into the clients array, 
-                //our server goes back to waiting for a new message to arrive, 
-                //while the client request remains open
-                console.log('pushing client request to array because there are no messages');
-                clients.push(res);
-            };
+                var count = url_parts.path.replace(/[^0-9]*/, '');
+                console.log('count is ' + count);
+                if (messagesUtil.messages.length > count) {
+                    res.end(JSON.stringify({
+                        count: messagesUtil.messages.length,
+                        append: messagesUtil.getMessages(count)
+                    }));
+                } else {
+                    //we will store the Response object into the clients array, 
+                    //our server goes back to waiting for a new message to arrive, 
+                    //while the client request remains open
+                    console.log('pushing client request to array because there are no messages');
+                    res.setHeader('X-Request-ID', '' + req.headers['x-request-id']);
+                    clients.push(res);
+                };
+            }
         }
         else if (url_parts.pathname === '/stats') {
             var count;
@@ -105,22 +117,7 @@ var server = http.createServer(function (req, res) {
             var clientCode = handleRegister();
             res.end(clientCode);
         }
-        else if (url_parts.pathname.substr(0, 5) == '/poll') {
-
-            //handling sending other resources as needed
-        } else if (url_parts.pathname.substr(0, 5) == '/msg/') {
-            // message receiving
-            var msg = unescape(url_parts.pathname.substr(5));
-            messages.push(msg);
-            while (clients.length > 0) {
-                var client = clients.pop();
-                client.end(JSON.stringify({
-                    count: messages.length,
-                    append: msg + '\n'
-                }));
-            }
-            res.end();
-        } else {
+        else {
             switch (url_parts.pathname) {
                 case '/client/styles/main.css':
                     fs.readFile('client/styles/main.css', function (err, data) {
@@ -192,15 +189,28 @@ var server = http.createServer(function (req, res) {
                         res.end();
                     });
                     break;
-                default:
-                    console.log('*************************************************************************************');
-                    console.log('the url_parts.pathname that led to default was: ' + url_parts.pathname);
-                    console.log('*************************************************************************************');
+                case '/client/images/anonymous.png':
+                    fs.readFile('client/images/anonymous.png', function (err, data) {
+                        res.writeHead(200, { 'Content-Type': 'image/png' });
+                        res.write(data);
+                        res.end();
+                    });
+                    break;
+                case '/':
+                case 'client/index.html':
+
                     fs.readFile('client/index.html', function (err, data) {
                         res.writeHead(200, { 'Content-Type': 'text/html' });
                         res.write(data);
                         res.end();
                     });
+                    break;
+                default:
+                    console.log('*************************************************************************************');
+                    console.log('the url_parts.pathname that led to default was: ' + url_parts.pathname);
+                    console.log('*************************************************************************************');
+                    res.writeHead(404)
+                    res.end();
                     break;
             }
         }
@@ -221,22 +231,76 @@ var server = http.createServer(function (req, res) {
             switch (req.url) {
                 case '/messages':
                     var message = JSON.parse(requestBody);
-                    console.log('message.email is ' + message.email);
-                    if (message.email === 'anonymous') {
-                        message.gravatar = '/client/images/anonymous.png'
+                    if ((message.email === undefined) || (message.name === undefined) || (message.message === undefined) || (message.times === undefined)) {
+                        res.writeHead(400);
+                        res.end();
                     } else {
-                        message.gravatar = createHash(message.email);
-                    }
-                    messagesUtil.addMessage(message);
-                    while (clients.length > 0) {
-                        var client = clients.pop();
-                        client.end(JSON.stringify({
+                        console.log('message.email is ' + message.email);
+                        if (message.email === 'anonymous') {
+                            message.gravatar = '/client/images/anonymous.png'
+                        } else {
+                            message.gravatar = createHash(message.email);
+                        }
+                        messagesUtil.addMessage(message);
+                        console.log('----------------------------------------------------------------------------------');
+                        console.log('there are now ' + clients.length + ' clients');
+                        console.log('here they are:');
+                        console.log(clients);
+                        console.log('----------------------------------------------------------------------------------');
+                        while (clients.length > 0) {
+                            var client = clients.pop();
+                            console.log('*************************************************************************');
+                            console.log('pop was made');
+                            console.log('client response is ' + client);
+                            console.log('*************************************************************************');
+                            client.end(JSON.stringify({
+                                count: messagesUtil.messages.length,
+                                append: messagesUtil.getMessages(count - 1)
+                            }));
+                        }
+                        res.end(JSON.stringify({
                             count: messagesUtil.messages.length,
                             append: messagesUtil.messages[messagesUtil.messages.length - 1]
                         }));
+
                     }
-                    res.end('message pushed - thank you');
                     break;
+                case '/logout':
+                    console.log('*****************************************************************************************');
+                    console.log('*****************************************************************************************');
+                    console.log('logout was called by: ' + req.url);
+                    console.log('number of client responses before logout is ' + clients.length);
+                    var key = (JSON.parse(requestBody)).key;
+                    var i = 0;
+                    while (i < clients.length) {
+                        var idToCheck = clients[i].getHeader('x-request-id');
+                        if (idToCheck) {
+                            if (idToCheck === key) {
+                                console.log('erasing id ' + idToCheck);
+                                clients.splice(i, 1);
+                            } else {
+                                i++;
+                            }
+                        };
+                    }
+
+                    console.log('number of client responses after logout is ' + clients.length);
+                    res.writeHead(200);
+                    res.write('hello');
+                    res.end();
+                    console.log('*****************************************************************************************');
+                    console.log('*****************************************************************************************');
+                    break;
+                case '/stats':
+                case '/register':
+                    res.writeHead(405);
+                    res.end();
+                    break;
+                default:
+                    res.writeHead(404);
+                    res.end();
+                    break;
+
             }
         });
     } else if (req.method === 'DELETE') {
@@ -244,26 +308,41 @@ var server = http.createServer(function (req, res) {
         console.log('req' + req.url);
         var url_parts = url.parse(req.url);
         console.log(url_parts);
-        //polling handling
-        var requestBody = '';
-        req.on('data', function (chunk) {
-            requestBody += chunk.toString();
-        });
-        req.on('end', function () {
-            var data2 = JSON.parse(requestBody);
-            var data = queryUtil.parse(requestBody);
-            console.log('we have all the data ', data);
-            console.log('we have all the data ', data2);
-            if (url_parts.pathname.substr(0, 8) === '/messages') {
-                messagesUtil.deleteMessage();
+        console.log('//////////////////////////////////////////////////////////////////////////////////');
+        console.log('url_parts.pathname.substr(0, 9) is ' + url_parts.pathname.substr(0, 9));
+        console.log("url_parts.path.substr(0, 17) !== '/messages/message' is " + (url_parts.path.substr(0, 17) !== '/messages/message'));
+        console.log('url_parts.path.substr(17) is ' + url_parts.path.substr(17));
+        console.log('!isNaN(url_parts.path.substr(17)) is ' + !isNaN(url_parts.path.substr(17)));
+        console.log('//////////////////////////////////////////////////////////////////////////////////');
+        if (url_parts.pathname.substr(0, 9) === '/messages') {
+            if ((url_parts.path.substr(0, 17) !== '/messages/message') || (isNaN(url_parts.path.substr(17)))) {
+                res.writeHead(400);
+                res.end();
+            } else {
+                messagesUtil.deleteMessage(url_parts.path.substr(10));
                 res.end('message deleted - thank you');
+            };
+        } else {
+            switch (url_parts.pathname) {
+                case '/stats':
+                case '/register':
+                    res.writeHead(405);
+                    res.end();
+                    break;
+                default:
+                    res.writeHead(404);
+                    res.end();
+                    break;
             }
-        });
+        }
     }
-    else {
+    else if (req.method === 'OPTIONS') {
+        res.writeHead(204);
+        res.end();
+    } else {
         res.writeHead(405);
         res.end();
-    }
+    };
 
     // res.end();
     // if (url_parts.pathname == '/') {
@@ -291,3 +370,10 @@ setInterval(function () {
         console.log("Number of connections : " + count);
     });
 }, 60000);
+
+setInterval(function () {
+    for (var i = 0; i < clients.length; i++) {
+        var client = clients.pop();
+        client.end();
+    }
+}, 200000);

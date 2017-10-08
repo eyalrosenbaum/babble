@@ -9,190 +9,73 @@ html{
 body{
     height: 100%;
     width:100%;
-    background-color: rgb(235, 237, 236);
+    background-color: rgb(245, 245, 245);
     margin: auto;
 }
 cite{
     font-style: normal;
 }
-header.site-header{
+header.App-header{
     background-color:rgb(53, 55, 68);
     width: 100%;
     height: 100px;
     box-sizing: border-box;
     padding: 15px 13px;
 }
-.side-bar{
-    position: absolute;
-    height: calc(100% - 100px);
-    width: 230px;
-    background-color: rgb(94, 211, 149);
-}
-footer.write-message-container{
-    /*position: absolute;
-    bottom: 0;
-    left: 230px;
-    height: 93px;
-    width: calc(100% - 230px);
-    box-sizing: border-box;
-    background-color: rgb(255, 255, 255);
-    border-top: 0.5px solid rgb(153, 153, 153);*/
-}
-footer.write-message-container>textarea{
-    /*font-family: Nunito;
-    color:  #616161;
-    font-size: 15px;
-    font-weight: 400;
-    text-align: left;
-    width: 90%;*/
-}
-
-.Growable {
-    /*position: relative;*/
-    /*bottom: 0;*/
-    /*left: 230px;
-    height: 93px;
-    width: calc(100% - 230px);
-    box-sizing: border-box;
-    background-color: rgb(255, 255, 255);
-    border-top: 0.5px solid rgb(153, 153, 153);
-    overflow: hidden;*/
+header.App-roomHeader{
+    height: 7%;
     position: relative;
-    position: absolute;
-    left: 230px;
-    bottom: 0px;
-    width: calc(100% - 230px);
-    box-sizing: border-box;
-    background-color: rgb(255, 255, 255);
-	/*border: 1px solid;*/
-    border-top: 0.5px solid rgb(153, 153, 153);
-	max-height: 300px;
-    min-height: 93px;
-	overflow: hidden;
-	-webkit-scrollbar: red;
 }
 
-.Growable span{
-    /*position: absolute;
-    bottom: 0px;
-    left: 0;
-    max-height: 300px;
-    min-height: 100%;
-    max-width: 88%;
-    font-family: Nunito;
-    color: #616161;
-    font-size: 15px;
-    font-weight: 400;
-    overflow: hidden;*/
-}
-
-.Growable textarea,
-.Growable pre {
-	/*margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    font-family: Nunito;
-    color: #616161;
-    font-size: 15px;
-    font-weight: 400;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    padding: 0.5em;
-    bottom: 0;
-    left: 0;*/
+.NewMessageArea textarea,
+.NewMessageArea pre {
     margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 	font-family: inherit;
 	font-size: inherit;
-	/*white-space: pre-wrap;*/
     white-space: normal;
 	word-wrap: break-word;
 	padding: 0.1em;
-    padding-right: 10%;
+    padding-right: 5%;
 }
 
-
-.Growable textarea {
-    /*font-family: Nunito;
-    color: #616161;
-    width: 100%;
-    font-size: 15px;
-    font-weight: 400;
-    text-align: left;
-    resize: none;
-    border: none;
-    position: absolute;
-    padding-right: 10%; 
-    bottom: 0px;
-    left: 0;
-    height: calc(100% - 1px);*/
-    
+.NewMessageArea textarea {    
     width: 100%;
 	resize: none;
 	border: none;
-	
 	position: absolute;
 	top: 0; left: 0;
 	height: 100%;
 	overflow: visible;
  
 }
-textarea:focus{
-    /*border: 0 none #FFF;
-    overflow: hidden;
-    outline:none;*/
-}
-main.main-message-area{
-    display: inline-block;
-    height: calc(100% - 193px);
-    width: calc(100% - 230px);
-    margin-left: 230px;
-    position: relative;
-}
-.title{
-    font-family: Nunito;
-    color:  #292929;
-    font-size: 22.5px;
-    font-weight: 400;
-    text-align: left;
-    margin-left: 29px;
-}
-.purpleman-writing,.green-writing{
+
+
+.App-roomHeader-fixedArea-alignRight{
     font-family: Nunito;
     color:  #353744;
     font-size: 15px;
     font-weight: 700;
     text-align: right;
 }
-/*
-img.msg-arrow-img:hover, img.msg-wrap-img:hover{
+
+dl,dt,dd{
+    display: inline-block;
+    margin: 0;
+}
+
+img.Button-msgArrowImage:hover, img.Button-msgWrapImage:hover{
     cursor: pointer;
-}*/
-img.msg-arrow-img{
-    height: 27px;
-    width: 32px;
-    position: absolute;
-    bottom: calc(50% - 13px);
-    left: 91.4%;
-    z-index: 100;
 }
-img.msg-wrap-img{
-    height: 55px;
-    width: 55px;
-    position: absolute;
-    bottom: calc(50% - 27px);
-    left: 90%;
-    z-index: 99;
-}
-ol.message-list{
+
+ol.MainMessageArea-messageList{
     list-style: none;
     margin-top: -14px;
 }  
-.message-body{
+.Message-body{
     max-width: 600px;
+    min-width: 120px;
     border-radius: 9px;
     border-style: solid;
     border-width: 1px;
@@ -204,44 +87,82 @@ ol.message-list{
     font-weight: 400;
     text-align: left;
     float: left;
+    word-wrap: break-word;
 }
-span.delete-button{
-    position: absolute;
-    left: 665%;
-    top: 7px;
-    display: none;
+button.Message-deleteButton{
+    background-color: transparent;
     background-image: url(../images/close.png);
     background-repeat: no-repeat;
-    background-size: 0.8rem 0.8rem;
-    height: 40px;
-    width: 40px;
+    background-size: 0.6rem 0.6rem;
+    height: 10px;
+    width: 10px;
+    position: absolute; 
+    right: 2%;
+    top: 40%;
+    border: 0;
+    -webkit-clip-path: inset(50%);
+    clip-path: inset(50%);
+    display: inline-block;
+    margin: -1px;
+    overflow: hidden;
 }
-span.delete-button:hover{
+button.Message-deleteButton:focus{
+    clip: auto;
+    -webkit-clip-path: none;
+    clip-path: none;
+    margin: 0;
+    overflow: visible;
+    width: auto;
+    white-space: inherit;
+}
+.is-mine:focus .Message-deleteButton,.is-mine:hover .Message-deleteButton{
+    clip: auto;
+    -webkit-clip-path: none;
+    clip-path: none;
+    margin: 0;
+    overflow: visible;
+    width: auto;
+    white-space: inherit;
+}
+.is-mine:focus,.is-mine:hover{
+    background-color:#ebedec;
+    color:#616161;
+    font-family: Nunito;
+    font-size: 15px;
+    font-weight: 400;
+}
+button.Message-deleteButton:hover{
     cursor: pointer;
 }
-.message-body:hover span.delete-button{
+.Message-body:hover span.Message-deleteButton{
     display: inline-block;
 }
-.message-image{
+.Message-image{
+    background: white;
     width: 36px;
     height: 36px;
     border-radius: 20px;
     float: left;
-    margin: 10px;
+    margin-right: 10px;
     margin-left: -20px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #d7d7d7;
 }
-.message-text-header{
+.Message-textHeader{
     float: left;
     display: block;
     font-family: Nunito;
     color: #202729;
     font-size: 15px;
     font-weight: 700;
-    text-align: right;
+    /*text-align: right;*/
+    width: 100%;
+    box-sizing: border-box;
     padding: 9px 9px 1px 9px;
     position: relative;
 }
-.message-sender{
+.Message-sender{
     display: inline-block;
     font-size: 1em;
     -webkit-margin-before: 0;
@@ -250,28 +171,25 @@ span.delete-button:hover{
     -webkit-margin-end: 0;
     font-weight: bold;
 }
-.message-body-text{
+.Message-bodyText{
     display: block;
     padding: 1px 9px 6px 8px;
     clear: both;
 }
-.message-time{
+.Message-time{
     font-family: Nunito;
     color:  #999999;
     font-size: 12px;
     font-weight: 400;
     text-align: left;
     margin-left: 10px;
+    padding-right: 20px;
 }
-li.message{
+li.Message{
     clear: both;
     padding-top: 14px;
 }
-.fixed-area{
-    position: absolute;
-    top: 10px;
-    right: 42px;
-}
+
 .Modal {
     border-radius: 2px;
     position: fixed;
@@ -287,7 +205,7 @@ li.message{
     background-color: white;
     padding: 20px;
     font-family: Nunito;
-    z-index: 100;
+    z-index: 102;
     background-color: rgb(235, 237, 236);
     opacity: 1;
     transition: opacity 1.4s ease-out;
@@ -307,18 +225,18 @@ li.message{
 .Modal:target {
 	display: block;
 }
-.app-area{
+.App{
     height: 100%;
 }
 .Modal>form{
     padding:0.5em;
 }
-.mask{
+.Mask{
     position: fixed;
     top: 0;
     left: 0;
     background:rgba(0, 0, 0, 0.6);
-    z-index:90;
+    z-index:101;
     width: 100%;
     height: 100%;
     opacity: 1;
@@ -327,7 +245,7 @@ li.message{
     -moz-transition: opacity 1.4s ease-out;
     -webkit-transition: opacity 1.4s ease-out;
 }
-.full-name-input,.email-input{
+.Modal-fullNameInput,.Modal-emailInput{
     padding-top: 20px;
 }
 input{
@@ -360,38 +278,38 @@ label{
     font-weight: 400;
     text-align: left;
 }
-.modal-header{
+.Modal-header{
     font-size: 1.5em;
     font-weight: normal;
     -webkit-margin-before: 0;
     -webkit-margin-after: 0;
 }
-.sign-in-buttons{
+Modal-signInButtons{
     position: absolute;
     bottom: 2.5em;
     right: 1.3em;
 }
-.sign-in-buttons>button{
+Modal-signInButtons>button{
     font-family: Nunito;
     border-style: none;
     border-radius: 2px;
     font-size: 16px;
 }
-.sign-in-buttons>button:hover{
+Modal-signInButtons>button:hover{
     cursor: pointer;
 }
-.identified-sign-in-btn{
+.IdentifiedSignInButton{
     color:white;
     background: -webkit-linear-gradient(-180deg, rgb(117, 194, 0), rgb(64, 129, 67));
     background: linear-gradient(-180deg, rgb(117, 194, 0), rgb(64, 129, 67));
     width: 5em;
 }
-.anonymous-sign-in-btn{
+.AnonymousSignInButton{
     background: -webkit-linear-gradient(-180deg, rgb(177, 183, 188), rgb(148, 149, 149));
     background: linear-gradient(-180deg, rgb(177, 183, 188), rgb(148, 149, 149));
     margin-right: 5px;
 }
-.hidden{
+.is-hidden{
     opacity: 0;
     transition: opacity 1.4s ease-out;
     -ms-transition: opacity 1.4s ease-out;
@@ -399,10 +317,10 @@ label{
     -webkit-transition: opacity 1.4s ease-out;
 }
 
-.hidden button:hover{
+.is-hidden button:hover{
     cursor: default;
 }
-.error-name,.error-email {
+.Modal-errorName,.Modal-errorEmail {
     font-family: Nunito;
     font-size: 0.7em;
     color: red;
@@ -413,4 +331,345 @@ label{
 }
 .no-show{
     display: none;
+}
+::-webkit-scrollbar {
+    width: 0.85%;
+    height: 20%;
+    background-color:  #ffffff;
+
+}
+ 
+::-webkit-scrollbar-track {
+    /*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); */
+    border-radius: 10px;
+    background-color:  #ffffff;
+    height: 61.1%;
+ 
+}
+ 
+ ::-webkit-scrollbar-track-piece  { 
+     background-color:  #ffffff; 
+     border-style: solid;
+     border-radius: 10px;
+     border-width: 1px;
+     border-color:  #d7d7d7;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 1px;
+    border-color:  #d7d7d7;
+    background-color:  rgb(235, 237, 236);
+    /*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); */
+}
+
+.Sidebar{
+    position: absolute;
+    height: calc(100% - 100px);
+    width: 0px;
+    background-color: rgb(94, 211, 149);
+    }
+.NewMessageArea {
+    width: 83%;
+    margin-right: 2.3%; 
+    box-sizing: border-box;
+    background-color: rgb(255, 255, 255);
+    /*border-radius: 18px;*/
+    border: 1px solid #d7d7d7;
+	overflow: visible;
+	-webkit-scrollbar: red;
+    position: relative;
+    left: 2.3%;
+    bottom: 0;
+}
+
+.Modal-fullNameInput,.Modal-emailInput{
+    padding-top: 60px;
+}
+
+.Modal{
+    max-height: 100%;
+    min-height: 0%;
+    width: 88.7%;
+    height: 89.3%;
+    z-index: 102;
+    
+}
+
+.NewMessageArea textarea{
+    /*border-radius: 18px;*/
+    border: 1px solid #d7d7d7;
+}
+main.MainMessageArea{
+    height: calc(90% - 193px);
+    width: calc(98%);
+    margin-right: 10px;
+    box-sizing: border-box;
+    margin-left: 0px;
+    position: relative;
+    overflow-y: auto;
+}
+.App-roomTitle{
+    font-family: Nunito;
+    color:  #292929;
+    font-size: 22.5px;
+    font-weight: 400;
+    text-align: left;
+    margin-left: 2.4%;
+    position: relative;
+    left: 0;
+}
+img.Button-msgArrowImage{
+    height: 27px;
+    width: 32px;
+    z-index: 100;
+    position: absolute;
+    left: calc(101% + 16px);
+    bottom: calc(50% - 13px);
+}
+img.Button-msgWrapImage{
+    position: absolute;
+    left: 101%;
+    height: 55px;
+    width: 55px;
+    bottom: calc(50% - 27px);
+    z-index: 99;
+}
+::-webkit-scrollbar {
+    width: 0.85%;
+    height: 0%;
+    background-color:  #ffffff;
+
+}
+.submit-button{
+    position: relative;
+}
+@media screen and (max-width: 179px){
+.App-header>img{
+    width:130px;
+}
+.Message-body{
+    min-width: 0;
+}
+
+}
+@media screen and (max-width: 319px){
+img.Button-msgArrowImage {
+    height: 15px;
+    width: 19px;
+    z-index: 100;
+    position: absolute;
+    left: calc(0% + 10px);
+    bottom: calc(-47% + 8px);
+}
+.NewMessageArea{
+    height: 8.7%;
+    border-radius: 18px;
+}
+img.Button-msgWrapImage {
+    position: absolute;
+    left: 0%;
+    height: 34px;
+    width: 32px;
+    bottom: -47%;
+    z-index: 99;
+}
+
+.NewMessageArea textarea{
+    border-radius: 18px;
+}
+}
+@media screen and (min-width: 319px) and (max-width:400px){
+img.Button-msgArrowImage {
+    height: 20px;
+    width: 23px;
+    z-index: 100;
+    position: absolute;
+    left: calc(101% + 16px);
+    bottom: calc(50% - 13px);
+}
+img.Button-msgWrapImage {
+    position: absolute;
+    left: 101%;
+    height: 46px;
+    width: 46px;
+    bottom: calc(50% - 27px);
+    z-index: 99;
+
+}
+
+}
+@media screen and (min-width: 400px) and (max-width: 638px){
+    img.Button-msgArrowImage{
+    height: 27px;
+    width: 32px;
+    z-index: 100;
+    position: absolute;
+    left: calc(101% + 16px);
+    bottom: calc(50% - 13px);
+}
+img.Button-msgWrapImage{
+    position: absolute;
+    left: 101%;
+    height: 55px;
+    width: 55px;
+    bottom: calc(50% - 27px);
+    z-index: 99;
+}
+}
+@media screen and (min-width: 320px) and (max-width: 638px){
+.Message-body{
+        min-width: 120px;
+}
+.App-roomHeader-fixedArea{
+    position: absolute;
+    top: 10px;
+    right: 42px;
+    margin: 1%;
+}
+.Sidebar{
+    position: absolute;
+    height: calc(100% - 100px);
+    width: 0px;
+    background-color: rgb(94, 211, 149);
+    }
+.NewMessageArea {
+    width: 83%;
+    margin-right: 2.3%; 
+    box-sizing: border-box;
+    background-color: rgb(255, 255, 255);
+    border-radius: 18px;
+    border: 1px solid #d7d7d7;
+    height: 8.7%;
+	overflow: visible;
+	-webkit-scrollbar: red;
+    position: relative;
+    left: 2.3%;
+    bottom: 0;
+}
+
+.Modal-fullNameInput,.Modal-emailInput{
+    padding-top: 60px;
+}
+
+.Modal{
+    max-height: 100%;
+    min-height: 0%;
+    width: 88.7%;
+    height: 89.3%;
+    z-index: 102;
+    
+}
+
+.NewMessageArea textarea{
+    border-radius: 18px;
+    border: 1px solid #d7d7d7;
+}
+main.MainMessageArea{
+    height: calc(90% - 193px);
+    width: calc(98%);
+    margin-right: 10px;
+    box-sizing: border-box;
+    margin-left: 0px;
+    position: relative;
+    overflow-y: auto;
+}
+.App-roomTitle{
+    font-family: Nunito;
+    color:  #292929;
+    font-size: 22.5px;
+    font-weight: 400;
+    text-align: left;
+    margin-left: 2.4%;
+    position: relative;
+    left: 0;
+}
+
+::-webkit-scrollbar {
+    width: 0.85%;
+    height: 0%;
+    background-color:  #ffffff;
+
+}
+.submit-button{
+    position: relative;
+}
+}
+@media screen and (min-width: 638px){
+.NewMessageArea textarea,
+.NewMessageArea pre {
+    padding-right: 115px;
+}
+.Message-body{
+        min-width: 120px;
+}
+.App-roomHeader-fixedArea{
+    position: absolute;
+    top: 10px;
+    right: 42px;
+    margin: 1%;
+}
+.Sidebar{
+    position: absolute;
+    height: calc(100% - 100px);
+    width: 230px;
+    background-color: rgb(94, 211, 149);
+}
+
+.NewMessageArea {
+    position: absolute;
+    left: 230px;
+    bottom: 0px;
+    width: calc(100% - 230px);
+    box-sizing: border-box;
+    background-color: rgb(255, 255, 255);
+    border:none;
+    border-top: 0.5px solid #d7d7d7;
+	max-height: 300px;
+    min-height: 93px;
+	overflow: hidden;
+	-webkit-scrollbar: red;
+    margin:0;
+    
+}
+
+main.MainMessageArea{
+    display: inline-block;
+    height: calc(90% - 193px);
+    width: calc(98% - 230px);
+    margin-right: 10px;
+    box-sizing: border-box;
+    margin-left: 230px;
+    position: relative;
+    overflow-y: auto;
+}
+
+.App-roomTitle{
+    font-family: Nunito;
+    color:  #292929;
+    font-size: 22.5px;
+    font-weight: 400;
+    text-align: left;
+    margin-left: 29px;
+    position: absolute;
+    left: 230px;
+}
+
+img.Button-msgArrowImage{
+    height: 27px;
+    width: 32px;
+    position: absolute;
+    bottom: calc(50% - 13px);
+    left: calc(100% - 100px);
+    z-index: 100;
+}
+img.Button-msgWrapImage{
+    height: 55px;
+    width: 55px;
+    position: absolute;
+    bottom: calc(50% - 27px);
+    left: calc(100% - 115px);
+    z-index: 99;
+}
 }

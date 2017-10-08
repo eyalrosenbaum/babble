@@ -7,21 +7,47 @@ var Babble = {
     userInfo: {
         name: '',
         email: '',
-        clientKey: ''
+        clientKey: '',
+        counter: 0
     }
 };
 
 var historyBabble = localStorage.getItem('babble');
-if (historyBabble){
-    console.log(historyBabble);
+if (historyBabble) {
+
     Babble = JSON.parse(historyBabble);
+    getMessages(0, showMessages);
+    getStats(updateStats);
+    document.querySelector('.NewMessageArea textarea').value = Babble.currentMessage;
 }
+
+
+//cleaning everything on page unload
+window.addEventListener('beforeunload', function (e) {
+    console.log('unload event triggered');
+    var credentials = {
+        key: Babble.userInfo.clientKey
+    };
+
+    var options = {
+        method: 'POST',
+        action: 'logout',
+        data: JSON.stringify(credentials)
+    };
+
+    request(options);
+});
+
+// window.addEventListener('unload',function(e){
+//     window.localStorage.clear();
+// });
+
 
 // checking if first load or not, if so pop up modal and mask
 if (!localStorage.getItem('babble')) {
     setTimeout(function () {
-        document.querySelector('.mask').classList.remove('hidden');
-        document.querySelector('.Modal').classList.remove('hidden');
+        document.querySelector('.Mask').classList.remove('is-hidden');
+        document.querySelector('.Modal').classList.remove('is-hidden');
     }, 1400);
 } else {
     removeMaskModalFromDom();
@@ -29,11 +55,12 @@ if (!localStorage.getItem('babble')) {
 
 //adding click event handlers to modal buttons
 if (document.querySelector('.Modal')) {
-    document.querySelector('.anonymous-sign-in-btn').addEventListener('click', anonymousSignIn);
-    document.querySelector('.identified-sign-in-btn').addEventListener('click', identifiedSignIn);
+    document.querySelector('.AnonymousSignInButton').addEventListener('click', anonymousSignIn);
+    document.querySelector('.IdentifiedSignInButton').addEventListener('click', identifiedSignIn);
 }
 
-document.querySelector('.Growable textarea').addEventListener('keyup', handleTextAreaInput);
+document.querySelector('.NewMessageArea textarea').addEventListener('keyup', handleTextAreaInput);
+document.querySelector('#submitBtn').addEventListener('click', sendMessage);
 //serge's code to make textarea growable
 makeGrowable(document.querySelector('.js-growable'));
 
@@ -47,7 +74,7 @@ function makeGrowable(container) {
 
 //function to remove modal and mask from dom after we are finished with it
 function removeMaskModalFromDom() {
-    var mask = document.querySelector('.mask');
+    var mask = document.querySelector('.Mask');
     var modal = document.querySelector('.Modal');
     var body = document.querySelector('body');
     body.removeChild(mask);
@@ -57,15 +84,15 @@ function removeMaskModalFromDom() {
 function signIn() {
     var promise = register();
     promise.then(function (response) {
-        console.log(response);
         Babble.userInfo.clientKey = response;
-        localStorage.setItem('babble',JSON.stringify(Babble));
-        document.querySelector('.mask').classList.add('hidden');
-        document.querySelector('.Modal').classList.add('hidden');
+        localStorage.setItem('babble', JSON.stringify(Babble));
+        document.querySelector('.Mask').classList.add('is-hidden');
+        document.querySelector('.Modal').classList.add('is-hidden');
         setTimeout(function () {
             removeMaskModalFromDom();
             setTimeout(function () {
                 getMessages(0, showMessages);
+                getStats(updateStats);
             }, 200);
         }, 1400);
     });
@@ -77,10 +104,10 @@ function signIn() {
 
 //a function to erase errors in identified sign in from screen after the user tries again to sign in
 function errorReset() {
-    var emailErrorMessage = document.querySelector('.error-email');
+    var emailErrorMessage = document.querySelector('.Modal-errorEmail');
     emailErrorMessage.classList.remove('show');
     emailErrorMessage.classList.add('no-show');
-    var nameErrorMessage = document.querySelector('.error-name');
+    var nameErrorMessage = document.querySelector('.Modal-errorName');
     nameErrorMessage.classList.remove('show');
     nameErrorMessage.classList.add('no-show');
 }
@@ -99,27 +126,22 @@ function anonymousSignIn(e) {
 function identifiedSignIn(e) {
     e.preventDefault();
     errorReset();
-    var email = document.querySelector('.email-input>input').value;
-    console.log('email is ' + email);
-    var name = document.querySelector('.full-name-input>input').value;
-    console.log('name is ' + name);
+    var email = document.querySelector('.Modal-emailInput>input').value;
+    var name = document.querySelector('.Modal-fullNameInput>input').value;
     if (email !== '' && name !== '') {
         Babble.userInfo.email = email;
         Babble.userInfo.name = name;
         localStorage.setItem('babble', JSON.stringify(Babble));
-        console.log('Babble.userInfo.email: ' + Babble.userInfo.email);
-        console.log('Babble.userInfo.name: ' + Babble.userInfo.name);
-        console.log('from storage: ' + localStorage.getItem('babble'));
         signIn();
     } else {
         //handling errors - blank inputs
         if (email === '') {
-            var emailErrorMessage = document.querySelector('.error-email');
+            var emailErrorMessage = document.querySelector('.Modal-errorEmail');
             emailErrorMessage.classList.remove('no-show');
             emailErrorMessage.classList.add('show');
         }
         if (name === '') {
-            var nameErrorMessage = document.querySelector('.error-name');
+            var nameErrorMessage = document.querySelector('.Modal-errorName');
             nameErrorMessage.classList.remove('no-show');
             nameErrorMessage.classList.add('show');
         }
@@ -130,89 +152,106 @@ function showMessages(messagesArr) {
     if (messagesArr === undefined) {
         return;
     }
-    console.log('function showMessages');
-    console.log('messagesArr:\n' + messagesArr);
-    var messagesList = document.querySelector('ol.message-list');
+    var messagesList = document.querySelector('ol.MainMessageArea-messageList');
     for (var i = 0; i < messagesArr.length; i++) {
-        var li = document.createElement('li');
-        li.setAttribute('id', messagesArr[i].id);
-        li.classList.add('message');
-        /*adding gravatar*/
-        var img = document.createElement('img');
-        img.setAttribute('src', messagesArr[i].gravatar);
-        img.setAttribute('alt', '');
-        img.classList.add('message-img');
-        li.appendChild(img);
-        /*adding gravatar end*/
-        /*adding message body*/
-        var messageBody = document.createElement('div');
-        messageBody.classList.add('message-body');
-        /*adding header to message body*/
-        var messageTextHeader = document.createElement('div');
-        messageTextHeader.classList.add('message-text-header');
-        /*adding cite to header*/
-        var messageSender = document.createElement('cite');
-        messageSender.classList.add('message-sender');
-        var messageSenderText = document.createTextNode(messagesArr[i].author);
-        messageSender.appendChild(messageSenderText);
-        messageTextHeader.appendChild(messageSender);
-        /*adding time to header*/
-        var messageTime = document.createElement('span');
-        messageTime.classList.add('message-time');
-        var messageTimeText = document.createTextNode(messagesArr[i].timestamp);
-        messageTime.appendChild(messageTimeText);
-        messageTextHeader.appendChild(messageTime);
-        /*adding delete buttom to message - only if it is the users message*/
-        if (messagesArr[i].author === Babble.userInfo.name) {
-            var deleteButton = document.createElement('span');
-            deleteButton.classList.add('delete-button');
-            messageTextHeader.appendChild(deleteButton);
+        if (!document.querySelector('li#' + messagesArr[i].id)) {
+            var li = document.createElement('li');
+            li.setAttribute('id', messagesArr[i].id);
+
+            li.classList.add('Message');
+            /*adding gravatar*/
+            var img = document.createElement('img');
+            img.setAttribute('src', messagesArr[i].gravatar);
+            img.setAttribute('alt', '');
+            img.classList.add('Message-image');
+            li.appendChild(img);
+            /*adding gravatar end*/
+            /*adding message body*/
+            var messageBody = document.createElement('div');
+            messageBody.classList.add('Message-body');
+            messageBody.setAttribute('tabindex', 0);
+            /*adding header to message body*/
+            var messageTextHeader = document.createElement('div');
+            messageTextHeader.classList.add('Message-textHeader');
+            /*adding cite to header*/
+            var messageSender = document.createElement('cite');
+            messageSender.classList.add('Message-sender');
+            var messageSenderText = document.createTextNode(messagesArr[i].name);
+            messageSender.appendChild(messageSenderText);
+            messageTextHeader.appendChild(messageSender);
+            /*adding time to header*/
+            var messageTime = document.createElement('time');
+            messageTime.classList.add('Message-time');
+            var messageDate = new Date(messagesArr[i].times);
+            messageTime.setAttribute('datetime', messageDate);
+            var messageTimeText = document.createTextNode(messageDate.getHours() + ':' + messageDate.getMinutes());
+            messageTime.appendChild(messageTimeText);
+            messageTextHeader.appendChild(messageTime);
+            /*adding delete buttom to message and adding class to change background color - only if it is the users message*/
+            if (messagesArr[i].name === Babble.userInfo.name) {
+                var deleteButton = document.createElement('button');
+                deleteButton.setAttribute('aria-label', 'delete');
+                deleteButton.setAttribute('id', 'delete' + messagesArr[i].id);
+                deleteButton.classList.add('Message-deleteButton');
+                deleteButton.addEventListener('click', handleDelete);
+                deleteButton.setAttribute('tabindex', 0);
+                messageTextHeader.appendChild(deleteButton);
+                messageBody.classList.add('is-mine');
+            }
+            messageBody.appendChild(messageTextHeader);
+            /*adding header to message body end*/
+            /*adding message body text to message body*/
+            var messageTextBody = document.createElement('div');
+            messageTextBody.classList.add('Message-bodyText');
+            var messageTextBodyText = document.createTextNode(messagesArr[i].message);
+            messageTextBody.appendChild(messageTextBodyText);
+            messageBody.appendChild(messageTextBody);
+            /*adding message body text to message body end*/
+            li.appendChild(messageBody);
+            /*adding message body end*/
+            messagesList.appendChild(li);
+
         }
-        messageBody.appendChild(messageTextHeader);
-        /*adding header to message body end*/
-        /*adding message body text to message body*/
-        var messageTextBody = document.createElement('div');
-        messageTextBody.classList.add('message-body-text');
-        var messageTextBodyText = document.createTextNode(messagesArr[i].body);
-        messageTextBody.appendChild(messageTextBodyText);
-        messageBody.appendChild(messageTextBody);
-        /*adding message body text to message body end*/
-        li.appendChild(messageBody);
-        /*adding message body end*/
-        messagesList.appendChild(li);
     };
+    document.querySelector('li#' + (messagesArr[messagesArr.length - 1].id)).scrollIntoView();
+}
+
+function handleDelete(e) {
+    e.preventDefault();
+    var element = e.target;
+    var id = element.id.substr(6);
+    deleteMessage(id, getStats);
 }
 
 function updateStats(numOfUsers, numOfMessages) {
-    document.querySelector('.purpleman-writing').textContent = numOfUsers;
-    document.querySelector('.green-writing').textContent = numOfMessages;
+    document.querySelector('.js-users').textContent = numOfUsers;
+    document.querySelector('.js-messages').textContent = numOfMessages;
 }
 
 function handleTextAreaInput(e) {
     e.preventDefault();
     if (e.keyCode == 13) {
-        sendMessage();
+        sendMessage(e);
     } else {
-        Babble.currentMessage = document.querySelector('.growable textarea').value;
-        console.log('message is ' + Babble.currentMessage);
+        Babble.currentMessage = document.querySelector('.NewMessageArea textarea').value;
+        localStorage.setItem('babble', JSON.stringify(Babble));
     }
 }
 
 function updateMessage() {
-    var textArea = document.querySelector('.growable textarea');
+    var textArea = document.querySelector('.NewMessageArea textarea');
     Babble.currentMessage = textArea.value;
-    console.log(Babble.currentMessage);
 }
 
-function sendMessage() {
-    console.log('sendMessage()');
+function sendMessage(e) {
+    e.preventDefault();
     var promise = postMessage(Babble.currentMessage, getMessages);
     promise.then(function (response) {
-        console.log('response is ' + response);
-        document.querySelector('.Growable textarea').value = '';
+        document.querySelector('.NewMessageArea textarea').value = '';
         Babble.currentMessage = '';
+        getMessages(JSON.parse(response).count, showMessages);
+        getStats(updateStats);
     });
-    return false;
 }
 
 function register() {
@@ -231,36 +270,39 @@ function getMessages(counter, callback) {
     };
     var promise = request(options);
     promise.then(function (response) {
-        console.log('calling callback now');
-        console.log('response is ' + response);
-        callback(response.data);
-        if (response.data !== undefined) {
-            getMessages(response.data.count, callback);
+        console.log(response);
+        if ((response !== undefined)&&(response !='')) {
+            callback(JSON.parse(response).append);
+            if (JSON.parse(response) !== undefined) {
+                getMessages(JSON.parse(response).count, callback);
+                getStats(updateStats);
+            }
+        } else {
+            getMessages(counter, callback);
         }
     });
 }
 
 function postMessage(message, callback) {
-    console.log('name is '+ Babble.userInfo.name);
-    console.log('email is '+Babble.userInfo.email);
-    console.log('message is '+message);
     var messageData = {
         name: Babble.userInfo.name,
         email: Babble.userInfo.email,
         message: message,
         times: new Date().getTime()
     };
-    console.log('messageData is ' + messageData);
+
     var options = {
         method: 'POST',
         action: 'messages',
         data: JSON.stringify(messageData)
     };
-    console.log('messageData is: ' + options.data);
+
     return request(options);
+
 }
 
 function deleteMessage(id, callback) {
+
     var options = {
         method: 'DELETE',
         action: 'messages/' + id
@@ -268,11 +310,11 @@ function deleteMessage(id, callback) {
 
     var promise = request(options);
     promise.then(function (response) {
-        console.log(response);
+
         if (response) {
             var list = document.querySelector('ol');
             var element = document.querySelector('li#' + id);
-            ol.removeChild(element);
+            list.removeChild(element);
         };
     });
     callback(updateStats);
@@ -297,14 +339,15 @@ function request(options) {
         if (options.method === 'post') {
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         }
-        console.log('Babble.userInfo.clientKey is: '+Babble.userInfo.clientKey);
         xhr.setRequestHeader('X-Request-ID', Babble.userInfo.clientKey);
         xhr.addEventListener('load', e => {
             resolve(e.target.responseText);
         });
-        xhr.send(options.data);
+        try {
+            xhr.send(options.data);
+        } catch (error) {
+            console.log(error)
+        }
+
     });
 }
-
-getMessages(0, showMessages);
-getStats(updateStats);

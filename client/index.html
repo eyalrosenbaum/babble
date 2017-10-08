@@ -10,107 +10,63 @@
 </head>
 
 <body>
-    <!-- <div class="Modal-overlay"></div> -->
-    <div class="Modal hidden" id="register">
+    <div class="Modal is-hidden" id="register">
         <form action="">
-            <h1 class="modal-header">Who are you?</h1>
-            <div class="full-name-input">
+            <h1 class="Modal-header">Who are you?</h1>
+            <div class="Modal-fullNameInput">
                 <label for="fullName">Full name:</label>
                 <input type="fullName" />
             </div>
-            <div class="email-input">
+            <div class="Modal-emailInput">
                 <label for="email">Email:</label>
                 <input type="email" />
             </div>
-            <div class="sign-in-buttons">
-                <button class="anonymous-sign-in-btn">Stay Anonymous</button>
-                <button class="identified-sign-in-btn">Save</button>
+            <div class="Modal-signInButtons">
+                <button class="AnonymousSignInButton">Stay Anonymous</button>
+                <button class="IdentifiedSignInButton">Save</button>
             </div>
         </form>
-        <p class='error-name no-show'>Name needed in order to save</p>
-        <p class='error-email no-show'>Email needed in order to save</p>
+        <p class='Modal-errorName no-show'>Name needed in order to save</p>
+        <p class='Modal-errorEmail no-show'>Email needed in order to save</p>
     </div>
-    <div class="mask hidden">
+    <div class="Mask is-hidden">
 
     </div>
-    <div class="app-area">
-        <header class="site-header">
+    <div class="App">
+        <header class="App-header">
             <img src="../client/images/Babble-logo.png" alt="logo">
         </header>
-        <nav class="side-bar">
+        <nav class="Sidebar">
         </nav>
+        <header class="App-roomHeader">
+            <div class="App-roomHeader-fixedArea">
+                <dl>
+                    <dt><img src="../client/images/green.png" alt=""></dt>
+                    <dd class="App-roomHeader-fixedArea-alignRight js-messages">0</dd>
+                    <dt><img src="../client/images/purpleman.png" alt=""></dt>
+                    <dd class="App-roomHeader-fixedArea-alignRight js-users">0</dd>
+                </dl>
+            </div>
 
-        <main class="main-message-area">
-            <header>
-                <div class="fixed-area">
-                    <img src="../client/images/green.png" alt="">
-                    <span class="green-writing">0</span>
-                    <img src="../client/images/purpleman.png" alt="">
-                    <span class="purpleman-writing">0</span>
-                </div>
+            <h1 class="App-roomTitle">Vegans</h1>
+        </header>
+        <main class="MainMessageArea">
 
-                <h1 class="title">Vegans</h1>
-            </header>
-            <ol class="message-list">
-                <!--<li class="message">
-                    <img src="../client/images/eyal.jpg" alt="" class="message-image">
-                    <div class="message-body">
-                        <div class="message-text-header">
-                            <cite class="message-sender">Eyal</cite><span class="message-time">14:00</span><span class="delete-button"></span>
-                        </div>
-                        <div class="message-body-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo autem eum, quidem libero quam soluta
-                            totam esse sint quasi dolores doloribus, velit, earum nulla molestiae quaerat veritatis non optio
-                            alias.
-                        </div>
-                    </div>
-                </li>
-                <li class="message">
-                    <img src="../client/images/eyal.jpg" alt="my-picture" class="message-image">
-                    <div class="message-body">
-                        <div class="message-text-header">
-                            <h3 class="message-sender">Eyal</h3><span class="message-time">14:00</span><span class="delete-button"></span>
-                        </div>
-                        <div class="message-body-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo autem eum, quidem libero quam soluta
-                            totam esse sint quasi dolores doloribus, velit, earum nulla molestiae quaerat veritatis non optio
-                            alias.
-                        </div>
-                    </div>
-                </li>
-                <li class="message">
-                    <img src="../client/images/eyal.jpg" alt="my-picture" class="message-image">
-                    <div class="message-body">
-                        <div class="message-text-header">
-                            <h3 class="message-sender">Eyal</h3><span class="message-time">14:00</span><span class="delete-button"></span>
-                        </div>
-                        <div class="message-body-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo autem eum, quidem libero quam soluta
-                            totam esse sint quasi dolores doloribus, velit, earum nulla molestiae quaerat veritatis non optio
-                            alias.
-                        </div>
-                    </div>
-                </li>-->
+            <ol class="MainMessageArea-messageList">
             </ol>
         </main>
-        <!--<footer class="write-message-container">-->
-        <div class='Growable js-growable'>
+        <div class='NewMessageArea js-growable'>
             <form action="">
                 <pre>
-                    <button onclick='return sendMessage()'>
-                        <img src="../client/images/msg-send.png" alt="send-message-button-wrapper" class="msg-arrow-img" />
-                    </button>
-                    <button onclick='return sendMessage()'>
-                        <img src="../client/images/msg-wrap.png" alt="send-message-button" class="msg-wrap-img" />
+                    <button id='submitBtn' aria-label="submit" class="Button">
+                        <img src="../client/images/msg-send.png" alt="send-message-button-wrapper" class="Button-msgArrowImage" />
+                        <img src="../client/images/msg-wrap.png" alt="send-message-button" class="Button-msgWrapImage" />
                     </button>
                    <span></span>
-                   <!--<br>-->
                    </pre>
-                <textarea cols="30" rows="10">
-                </textarea>
+                <textarea cols="30" rows="10"></textarea>
             </form>
         </div>
-
-
-
-        <!--</footer>-->
     </div>
     <script src='../client/scripts/main.js' type='text/javascript'></script>
 </body>
