@@ -12,5 +12,8 @@
     "start": "node server/main.js"
   },
   "author": "Eyal Rosenbaum",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^4.0.1"
+  }
 }

@@ -9,12 +9,7 @@ var http = require('http'),
     randomKey = require('random-key');
 
 var clients = [];
-// var users = [];
-
-// http.createServer(function(req,res){
-//     res.end("Hello world");
-// }).listen(8080,'localhost');
-// console.log('server running');
+var stats = [];
 
 function createHash(emailAddress) {
     if (emailAddress === 'anonymous') {
@@ -27,22 +22,6 @@ function createHash(emailAddress) {
 }
 
 function handleRegister() {
-    // console.log(userInfoString);
-    // console.log(JSON.parse(userInfoString));
-    // var userInfo = JSON.parse(userInfoString);
-    // console.log(userInfo);
-    // var userGravatar;
-    // if (userInfo.email !== 'anonymous') {
-    //     userGravatar = createHash(userInfo.email);
-    // } else {
-    //     userGravatar = '/client/images/anonymous.png';
-    // }
-    // console.log('userGravatar: ' + userGravatar);
-    // var user = {
-    //     info: userInfo,
-    //     gravatar: userGravatar
-    // };
-    // users.push(user);
     var clientKey = randomKey.generate();
     return clientKey;
 }
@@ -51,20 +30,22 @@ function handleRegister() {
 function uniqueIDsHelper(clientsArr) {
     var result = [];
     for (var i = 0; i < clientsArr.length; i++) {
-        var idToCheck = clientsArr[i].getHeader('x-request-id')
+        var idToCheck = clientsArr[i].response.getHeader('x-request-id')
         if (idToCheck) {
             if (!result.includes(idToCheck)) {
                 result.push(idToCheck);
             };
         };
     };
-    console.log('found ' + result.length + ' unique user requests');
+    console.log('*************************************************************************************');
+    console.log('found ' + result.length + ' unique user requests out of ' + clients.length + ' requests');
+    console.log('*************************************************************************************');
     return result;
 }
 
 var server = http.createServer(function (req, res) {
     var url_parts = url.parse(req.url);
-    console.log('url parts: ' + JSON.stringify(url_parts));
+    // console.log('url parts: ' + JSON.stringify(url_parts));
     res.setHeader('Access-Control-Allow-Origin', '*');
     if (req.method === 'GET') {
         //parse URL
@@ -74,7 +55,7 @@ var server = http.createServer(function (req, res) {
         //polling handling
         if (url_parts.pathname === '/messages') {
             /*handling 400 status code error*/
-            console.log(url_parts);
+            // console.log(url_parts);
             if ((url_parts.path.substr(0, 18) !== '/messages?counter=') || (isNaN(url_parts.path.substr(19)))) {
                 console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
                 console.log('url_parts.path.substr(0, 18) === ' + url_parts.path.substr(0, 18));
@@ -85,8 +66,9 @@ var server = http.createServer(function (req, res) {
                 res.end();
             } else {
                 var count = url_parts.path.replace(/[^0-9]*/, '');
-                console.log('count is ' + count);
+                // console.log('count is ' + count);
                 if (messagesUtil.messages.length > count) {
+                    res.writeHead(200, { "Content-Type": "application/json" });
                     res.end(JSON.stringify({
                         count: messagesUtil.messages.length,
                         append: messagesUtil.getMessages(count)
@@ -94,28 +76,62 @@ var server = http.createServer(function (req, res) {
                 } else {
                     //we will store the Response object into the clients array, 
                     //our server goes back to waiting for a new message to arrive, 
-                    //while the client request remains open
-                    console.log('pushing client request to array because there are no messages');
+                    //while the client request remains open;
                     res.setHeader('X-Request-ID', '' + req.headers['x-request-id']);
-                    clients.push(res);
+                    res.writeHead(200, { "Content-Type": "application/json" });
+                    clients.push({ response: res, type: 'GET: /messages', timestamp: new Date().getTime() });
+                    console.log('inserted GET: /messages message for ' + req.headers['x-request-id']);
+                    console.log('number of get messages request is ' + clients.length);
                 };
             }
         }
         else if (url_parts.pathname === '/stats') {
-            var count;
-            server.getConnections(function (err, count) {
-                console.log("Number of connections : " + count);
-            });
-            var numOfClients = uniqueIDsHelper(clients);
-            var reply = {
-                users: numOfClients.length,
-                messages: messagesUtil.messages.length
-            };
-            res.end(JSON.stringify(reply));
+            res.setHeader('X-Request-ID', '' + req.headers['x-request-id']);
+            res.writeHead(200, { "Content-Type": "application/json" });
+            stats.push({ response: res, type: 'GET: /stats', timestamp: new Date().getTime() });
+            console.log('inserted GET: /stats message for ' + req.headers['x-request-id']);
+            // var count;
+            // server.getConnections(function (err, count) {
+            //     console.log("Number of connections : " + count);
+            // });
+            // var numOfClients = uniqueIDsHelper(clients);
+            // var reply = {
+            //     users: numOfClients.length,
+            //     messages: messagesUtil.messages.length
+            // };
+            // res.end(JSON.stringify(reply));
         }
         else if (url_parts.pathname === '/register') {
             var clientCode = handleRegister();
+            /*new stuff*/
+            while (stats.length > 0) {
+                var stat = stats.pop();
+                var numOfClients = uniqueIDsHelper(clients);
+                stat.response.end(JSON.stringify({
+                    //adding 1 to users because registered user and login user have no messages themselves in clients array
+                    users: numOfClients.length + 1,
+                    messages: messagesUtil.messages.length
+                }));
+            }
+            /*new stuff end*/
+            res.writeHead(200, { "Content-Type": "text/plain" });
             res.end(clientCode);
+        }
+        else if (url_parts.pathname === '/login') {
+            /*new stuff*/
+            console.log('logged in');
+            while (stats.length > 0) {
+                var stat = stats.pop();
+                var numOfClients = uniqueIDsHelper(clients);
+                stat.response.end(JSON.stringify({
+                    //adding 1 to users because registered user and login user have no messages themselves in clients array
+                    users: numOfClients.length + 1,
+                    messages: messagesUtil.messages.length
+                }));
+            }
+            /*new stuff end*/
+            res.writeHead(200, { "Content-Type": "text/plain" });
+            res.end('');
         }
         else {
             switch (url_parts.pathname) {
@@ -241,23 +257,39 @@ var server = http.createServer(function (req, res) {
                         } else {
                             message.gravatar = createHash(message.email);
                         }
+                        if (req.headers['x-request-id']) {
+                            message.header = req.headers['x-request-id'];
+                        } else {
+                            message.header = 'none';
+                        }
                         messagesUtil.addMessage(message);
                         console.log('----------------------------------------------------------------------------------');
                         console.log('there are now ' + clients.length + ' clients');
                         console.log('here they are:');
                         console.log(clients);
                         console.log('----------------------------------------------------------------------------------');
+                        /*sending responses to getstats requests*/
+                        while (stats.length > 0) {
+                            var stat = stats.pop();
+                            var numOfClients = uniqueIDsHelper(clients);
+                            stat.response.end(JSON.stringify({
+                                users: numOfClients.length,
+                                messages: messagesUtil.messages.length
+                            }));
+                        }
+                        /*sending responses to gegtmessages requests*/
                         while (clients.length > 0) {
                             var client = clients.pop();
                             console.log('*************************************************************************');
                             console.log('pop was made');
                             console.log('client response is ' + client);
                             console.log('*************************************************************************');
-                            client.end(JSON.stringify({
+                            client.response.end(JSON.stringify({
                                 count: messagesUtil.messages.length,
                                 append: messagesUtil.getMessages(count - 1)
                             }));
                         }
+
                         res.end(JSON.stringify({
                             count: messagesUtil.messages.length,
                             append: messagesUtil.messages[messagesUtil.messages.length - 1]
@@ -271,22 +303,53 @@ var server = http.createServer(function (req, res) {
                     console.log('logout was called by: ' + req.url);
                     console.log('number of client responses before logout is ' + clients.length);
                     var key = (JSON.parse(requestBody)).key;
+                    /*new stuff*/
+
+                    //removing stats requests of the logout user
                     var i = 0;
-                    while (i < clients.length) {
-                        var idToCheck = clients[i].getHeader('x-request-id');
+                    console.log('am i stuck?');
+                    while (i < stats.length) {
+                        var idToCheck = stats[i].response.getHeader('x-request-id');
+                        console.log('am I stuck here ? stats.length = '+stats.length);
                         if (idToCheck) {
                             if (idToCheck === key) {
+                                console.log('type of request was ' + stats[i].type);
+                                console.log('erasing id ' + idToCheck);
+                                stats.splice(i, 1);
+                            } else {
+                                i++;
+                            }
+                        };
+                    };
+                    console.log('probably');
+
+                    //removing messages requests of the logout user
+                    var i = 0;
+                    while (i < clients.length) {
+                        var idToCheck = clients[i].response.getHeader('x-request-id');
+                        if (idToCheck) {
+                            if (idToCheck === key) {
+                                console.log('type of request was ' + clients[i].type);
                                 console.log('erasing id ' + idToCheck);
                                 clients.splice(i, 1);
                             } else {
                                 i++;
                             }
                         };
-                    }
+                    };
 
+                    //sending stats responses to the rest of the users
+                    while (stats.length > 0) {
+                        var stat = stats.pop();
+                        var numOfClients = uniqueIDsHelper(clients);
+                        stat.response.end(JSON.stringify({
+                            users: numOfClients.length,
+                            messages: messagesUtil.messages.length
+                        }));
+                    }
+                    /*new stuff end*/
                     console.log('number of client responses after logout is ' + clients.length);
-                    res.writeHead(200);
-                    res.write('hello');
+                    res.writeHead(200, { "Content-Type": "text/plain" });
                     res.end();
                     console.log('*****************************************************************************************');
                     console.log('*****************************************************************************************');
@@ -320,6 +383,17 @@ var server = http.createServer(function (req, res) {
                 res.end();
             } else {
                 messagesUtil.deleteMessage(url_parts.path.substr(10));
+                /*sending responses to all getstats messages*/
+                while (stats.length > 0) {
+                    var stat = stats.pop();
+                    var numOfClients = uniqueIDsHelper(clients);
+                    stat.response.end(JSON.stringify({
+                        users: numOfClients.length,
+                        messages: messagesUtil.messages.length
+                    }));
+                }
+                /*new stuff end*/
+                res.writeHead(200, { "Content-Type": "text/plain" });
                 res.end('message deleted - thank you');
             };
         } else {
@@ -365,15 +439,60 @@ var server = http.createServer(function (req, res) {
 }).listen(8080, 'localhost');
 console.log('server running');
 
-setInterval(function () {
-    server.getConnections(function (err, count) {
-        console.log("Number of connections : " + count);
-    });
-}, 60000);
+// setInterval(function () {
+//     for (var i = 0; i < clients.length; i++) {
+//         var client = clients.pop();
+//    console.log('geee');
+//         client.end();
+//     }
+// }, 200000);
 
 setInterval(function () {
-    for (var i = 0; i < clients.length; i++) {
-        var client = clients.pop();
-        client.end();
+    // close out requests older than 30 seconds
+    var expiration = new Date().getTime() - 30000;
+    var response;
+    for (var i = clients.length - 1; i >= 0; i--) {
+        if (clients[i].timestamp < expiration) {
+            response = clients[i].response;
+            clients.splice(i, 1);
+            // console.log('/******************* */');
+            // console.log('response is: '+response);
+            // console.log('/******************* */');
+            // response.writeHead(200, { "Content-Type": "text/plain" });
+            // response.writeHead(200, { "Content-Type": "text/plain" });
+            response.end("");
+        }
     }
-}, 200000);
+}, 1000);
+
+setInterval(function () {
+    // close out requests older than 30 seconds
+    var expiration = new Date().getTime() - 30000;
+    var response;
+    for (var i = stats.length - 1; i >= 0; i--) {
+        if (stats[i].timestamp < expiration) {
+            response = stats[i].response;
+            stats.splice(i, 1);
+            // console.log('/******************* */');
+            // console.log('response is: '+response);
+            // console.log('/******************* */');
+            // response.writeHead(200, { "Content-Type": "text/plain" });
+            response.end("");
+        }
+    }
+}, 1000);
+
+
+setInterval(function () {
+    console.log('+++++++++++++++++++++++++++++++++++++++++++');
+    console.log('number of clients responses: ' + clients.length);
+    for (var i = 0; i < clients.length; i++) {
+        console.log(clients[i].response.getHeader('x-request-id'));
+    }
+    console.log('number of stat responses: ' + stats.length);
+    for (var i = 0; i < stats.length; i++) {
+        console.log(stats[i].response.getHeader('x-request-id'));
+    }
+    console.log('+++++++++++++++++++++++++++++++++++++++++++');
+
+}, 10000)

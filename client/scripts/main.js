@@ -14,28 +14,47 @@ var Babble = {
 
 var historyBabble = localStorage.getItem('babble');
 if (historyBabble) {
-
     Babble = JSON.parse(historyBabble);
-    getMessages(0, showMessages);
     getStats(updateStats);
+    /*first logging in*/
+    // var options = {
+    //     method: 'GET',
+    //     action: 'login',
+    // };
+
+    // var promise = request(options);
+    /*updating info for logged user*/
+    // promise.then(function () {
+
+    // console.log("origin");
+
+    var options = {
+        method: 'GET',
+        action: 'login',
+    };
+    var promise = request(options);
+    promise.then(getMessages(0, showMessages));
+    // getStats(updateStats);
+    // console.log('origin2');
     document.querySelector('.NewMessageArea textarea').value = Babble.currentMessage;
+    // });
 }
 
 
 //cleaning everything on page unload
-window.addEventListener('beforeunload', function (e) {
+window.addEventListener('unload', function (e) {
     console.log('unload event triggered');
     var credentials = {
         key: Babble.userInfo.clientKey
     };
+    navigator.sendBeacon('logout',JSON.stringify(credentials));
+    // var options = {
+    //     method: 'POST',
+    //     action: 'logout',
+    //     data: JSON.stringify(credentials)
+    // };
 
-    var options = {
-        method: 'POST',
-        action: 'logout',
-        data: JSON.stringify(credentials)
-    };
-
-    request(options);
+    // request(options);
 });
 
 // window.addEventListener('unload',function(e){
@@ -82,6 +101,7 @@ function removeMaskModalFromDom() {
 }
 //sending data to server, after signing in either as anonymous or identified user, we remove modal and mask
 function signIn() {
+    getStats(updateStats);
     var promise = register();
     promise.then(function (response) {
         Babble.userInfo.clientKey = response;
@@ -91,8 +111,9 @@ function signIn() {
         setTimeout(function () {
             removeMaskModalFromDom();
             setTimeout(function () {
+                // console.log("origin");
                 getMessages(0, showMessages);
-                getStats(updateStats);
+                // getStats(updateStats);
             }, 200);
         }, 1400);
     });
@@ -149,6 +170,7 @@ function identifiedSignIn(e) {
 }
 
 function showMessages(messagesArr) {
+    console.log(messagesArr);
     if (messagesArr === undefined) {
         return;
     }
@@ -184,11 +206,17 @@ function showMessages(messagesArr) {
             messageTime.classList.add('Message-time');
             var messageDate = new Date(messagesArr[i].times);
             messageTime.setAttribute('datetime', messageDate);
-            var messageTimeText = document.createTextNode(messageDate.getHours() + ':' + messageDate.getMinutes());
+            var messageTimeText;
+            var minutes = messageDate.getMinutes();
+            if (minutes > 10) {
+                messageTimeText = document.createTextNode(messageDate.getHours() + ':' + messageDate.getMinutes());
+            } else {
+                messageTimeText = document.createTextNode(messageDate.getHours() + ':0' + messageDate.getMinutes());
+            }
             messageTime.appendChild(messageTimeText);
             messageTextHeader.appendChild(messageTime);
             /*adding delete buttom to message and adding class to change background color - only if it is the users message*/
-            if (messagesArr[i].name === Babble.userInfo.name) {
+            if ((messagesArr[i].name === Babble.userInfo.name) && (messagesArr[i].header === Babble.userInfo.clientKey)) {
                 var deleteButton = document.createElement('button');
                 deleteButton.setAttribute('aria-label', 'delete');
                 deleteButton.setAttribute('id', 'delete' + messagesArr[i].id);
@@ -220,10 +248,14 @@ function handleDelete(e) {
     e.preventDefault();
     var element = e.target;
     var id = element.id.substr(6);
-    deleteMessage(id, getStats);
+    deleteMessage(id, function () {
+        updateStats(document.querySelector('.js-users').textContent, document.querySelector('.js-messages').textContent - 1);
+    });
 }
 
 function updateStats(numOfUsers, numOfMessages) {
+    console.log('num of users is ' + numOfUsers);
+    console.log('num of messages is ' + numOfMessages);
     document.querySelector('.js-users').textContent = numOfUsers;
     document.querySelector('.js-messages').textContent = numOfMessages;
 }
@@ -249,8 +281,8 @@ function sendMessage(e) {
     promise.then(function (response) {
         document.querySelector('.NewMessageArea textarea').value = '';
         Babble.currentMessage = '';
-        getMessages(JSON.parse(response).count, showMessages);
-        getStats(updateStats);
+        console.log("origin");
+        // getMessages(JSON.parse(response).count, showMessages);
     });
 }
 
@@ -271,13 +303,15 @@ function getMessages(counter, callback) {
     var promise = request(options);
     promise.then(function (response) {
         console.log(response);
-        if ((response !== undefined)&&(response !='')) {
+        if ((response !== undefined) && (response != '')) {
             callback(JSON.parse(response).append);
             if (JSON.parse(response) !== undefined) {
+                // console.log("origin");
                 getMessages(JSON.parse(response).count, callback);
-                getStats(updateStats);
+                // getStats(updateStats);
             }
         } else {
+            // console.log("origin");
             getMessages(counter, callback);
         }
     });
@@ -327,8 +361,14 @@ function getStats(callback) {
     };
     var promise = request(options);
     promise.then(function (response) {
-        var object = JSON.parse(response);
-        callback(object.users, object.messages);
+        if ((response !== undefined) && (response != '')) {
+            var object = JSON.parse(response);
+            console.log(object);
+            callback(object.users, object.messages);
+            getStats(callback);
+        } else {
+            getStats(callback);
+        }
     });
 }
 
@@ -340,13 +380,33 @@ function request(options) {
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         }
         xhr.setRequestHeader('X-Request-ID', Babble.userInfo.clientKey);
+        // xhr.timeout = 30000;
+        // xhr.ontimeout = function(){
+        //     console.log('timeout occured');
+        // };
         xhr.addEventListener('load', e => {
+            console.log(options);
+            console.log(e);
+            console.log(xhr);
+            console.log(xhr.status);
             resolve(e.target.responseText);
+        });
+        xhr.addEventListener('abort', e => {
+            console.log(e);
+        });
+        xhr.addEventListener('error', e => {
+            console.log(e);
+            console.log(xhr);
+            console.log(xhr.status);
+            if (xhr.status === 0)
+                request(options);
         });
         try {
             xhr.send(options.data);
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            console.log('error.name is ' + error.name);
+            console.log('error message is ' + error.message);
         }
 
     });
