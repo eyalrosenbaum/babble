@@ -45,6 +45,8 @@ function uniqueIDsHelper(clientsArr) {
 
 var server = http.createServer(function (req, res) {
     var url_parts = url.parse(req.url);
+    console.log('url_parts.pathname = ' + url_parts.pathname);
+    console.log('url_parts.path = ' + url_parts.path);
     // console.log('url parts: ' + JSON.stringify(url_parts));
     res.setHeader('Access-Control-Allow-Origin', '*');
     if (req.method === 'GET') {
@@ -310,15 +312,13 @@ var server = http.createServer(function (req, res) {
                     console.log('am i stuck?');
                     while (i < stats.length) {
                         var idToCheck = stats[i].response.getHeader('x-request-id');
-                        console.log('am I stuck here ? stats.length = '+stats.length);
-                        if (idToCheck) {
-                            if (idToCheck === key) {
-                                console.log('type of request was ' + stats[i].type);
-                                console.log('erasing id ' + idToCheck);
-                                stats.splice(i, 1);
-                            } else {
-                                i++;
-                            }
+                        console.log('am I stuck here ? stats.length = ' + stats.length + ' i is ' + i);
+                        if ((idToCheck) && (idToCheck === key)) {
+                            console.log('type of request was ' + stats[i].type);
+                            console.log('erasing id ' + idToCheck);
+                            stats.splice(i, 1);
+                        } else {
+                            i++;
                         };
                     };
                     console.log('probably');
@@ -327,16 +327,15 @@ var server = http.createServer(function (req, res) {
                     var i = 0;
                     while (i < clients.length) {
                         var idToCheck = clients[i].response.getHeader('x-request-id');
-                        if (idToCheck) {
-                            if (idToCheck === key) {
-                                console.log('type of request was ' + clients[i].type);
-                                console.log('erasing id ' + idToCheck);
-                                clients.splice(i, 1);
-                            } else {
-                                i++;
-                            }
+                        if ((idToCheck) && (idToCheck === key)) {
+                            console.log('type of request was ' + clients[i].type);
+                            console.log('erasing id ' + idToCheck);
+                            clients.splice(i, 1);
+                        } else {
+                            i++;
                         };
                     };
+
 
                     //sending stats responses to the rest of the users
                     while (stats.length > 0) {
