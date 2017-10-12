@@ -7,16 +7,21 @@ module.exports = {
     messages: messages,
 
     addMessage: function (message) {
-        message.id = 'message'+id++;
+        message.id = 'message' + id++;
         messages.push(message);
+        return message.id;
     },
 
     getMessages: function (counter) {
-        return (messages.slice(counter));
+        if (messages.length === 0) {
+            return [];
+        } else {
+            return (messages.slice(counter));
+        }
     },
 
     deleteMessage: function (id) {
-        console.log('id to remove is '+id);
+        console.log('id to remove is ' + id);
         for (var i = 0; i < messages.length; i++) {
             if (messages[i].id === id) {
                 console.log('found id in array');

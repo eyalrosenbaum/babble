@@ -15,6 +15,7 @@ body{
 cite{
     font-style: normal;
 }
+
 header.App-header{
     background-color:rgb(53, 55, 68);
     width: 100%;
@@ -309,7 +310,7 @@ label{
     background: linear-gradient(-180deg, rgb(177, 183, 188), rgb(148, 149, 149));
     margin-right: 5px;
 }
-.is-hidden{
+.Mask.is-hidden{
     opacity: 0;
     transition: opacity 1.4s ease-out;
     -ms-transition: opacity 1.4s ease-out;
@@ -317,6 +318,17 @@ label{
     -webkit-transition: opacity 1.4s ease-out;
 }
 
+.Modal.is-hidden{
+    opacity: 0;
+    transition: opacity 1.4s ease-out;
+    -ms-transition: opacity 1.4s ease-out;
+    -moz-transition: opacity 1.4s ease-out;
+    -webkit-transition: opacity 1.4s ease-out;
+}
+
+.is-in-background{
+    z-index: -100;
+}
 .is-hidden button:hover{
     cursor: default;
 }

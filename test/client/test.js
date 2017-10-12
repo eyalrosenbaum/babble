@@ -72,11 +72,13 @@ describe('Client-Server', function () {
 
     describe('API', function () {
         it('should issue GET /messages ', function () {
+            console.log(`${apiUrl}/messages?counter=0`);
             server.respondWith('GET', `${apiUrl}/messages?counter=0`, JSON.stringify([]));
             let callback = sinon.spy();
             Babble.getMessages(0, callback);
             server.respond();
             sinon.assert.calledWith(callback, []);
+
         });
         it('should issue POST /messages ', function () {
             server.respondWith('POST', `${apiUrl}/messages`, JSON.stringify({ id: '42' }));
