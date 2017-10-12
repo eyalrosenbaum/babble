@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vegans - Babble</title>
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+
+<body>
+    <div class="Modal is-hidden is-in-background" id="register">
+        <form action="">
+            <h1 class="Modal-header">Who are you?</h1>
+            <div class="Modal-fullNameInput">
+                <label for="fullName">Full name:</label>
+                <input type="fullName" />
+            </div>
+            <div class="Modal-emailInput">
+                <label for="email">Email:</label>
+                <input type="email" />
+            </div>
+            <div class="Modal-signInButtons">
+                <button class="AnonymousSignInButton">Stay Anonymous</button>
+                <button class="IdentifiedSignInButton">Save</button>
+            </div>
+        </form>
+        <p class='Modal-errorName no-show'>Name needed in order to save</p>
+        <p class='Modal-errorEmail no-show'>Email needed in order to save</p>
+    </div>
+    <div class="Mask is-hidden is-in-background">
+
+    </div>
+    <div class="App">
+        <header class="App-header">
+            <img src="../images/Babble-logo.png" alt="logo">
+        </header>
+        <nav class="Sidebar">
+        </nav>
+        <header class="App-roomHeader">
+            <div class="App-roomHeader-fixedArea">
+                <dl>
+                    <dt><img src="../images/green.png" alt="number of messages"></dt>
+                    <dd class="App-roomHeader-fixedArea-alignRight js-messages">0</dd>
+                    <dt><img src="../images/purpleman.png" alt="number of users"></dt>
+                    <dd class="App-roomHeader-fixedArea-alignRight js-users">0</dd>
+                </dl>
+            </div>
+
+            <h1 class="App-roomTitle">Vegans</h1>
+        </header>
+        <main class="MainMessageArea">
+
+            <ol class="MainMessageArea-messageList">
+            </ol>
+        </main>
+        <div class='NewMessageArea js-growable'>
+            <form action="">
+                <pre>
+                    <button id='submitBtn' aria-label="submit" class="Button">
+                        <img src="../images/msg-send.png" alt="send-message-button-wrapper" class="Button-msgArrowImage" />
+                        <img src="../images/msg-wrap.png" alt="send-message-button" class="Button-msgWrapImage" />
+                    </button>
+                   <span></span>
+                   </pre>
+                <textarea cols="30" rows="10"></textarea>
+            </form>
+        </div>
+    </div>
+    <script src='../scripts/main.js' type='text/javascript'></script>
+</body>
+
+</html>
