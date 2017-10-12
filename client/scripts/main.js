@@ -1,5 +1,8 @@
 'use strict';
 
+document.querySelector("#newMessageForm").setAttribute("action", "");
+document.querySelector("#modalForm").setAttribute("action", "");
+
 const apiUrl = "http://localhost:9000/";
 window.Babble = {
 
